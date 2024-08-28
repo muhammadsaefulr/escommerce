@@ -21,3 +21,10 @@ func InitUserController(db *gorm.DB) *controller.UserController {
 	userController := controller.NewUserController(userService)
 	return userController
 }
+
+func InitProductController(db *gorm.DB) *controller.ProductController {
+	productRepository := repository.NewProductRepository(db)
+	productService := service.NewProductService(productRepository)
+	productController := controller.NewProductController(productService)
+	return productController
+}

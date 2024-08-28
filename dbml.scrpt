@@ -1,44 +1,44 @@
-Table users {
-  id int [pk, increment] // Primary key
-  name varchar
-  email varchar [unique]
-  password varchar
-  created_at timestamp [default: `current_timestamp`]
-}
+  Table users {
+    id int [pk, increment] // Primary key
+    name varchar
+    email varchar [unique]
+    password varchar
+    created_at timestamp [default: `current_timestamp`]
+  }
 
-Table products {
-  id int [pk, increment] // Primary key
-  name varchar
-  description text
-  price decimal
-  stock int
-  created_at timestamp [default: `current_timestamp`]
-  updated_at timestamp [default: `current_timestamp`]
-}
+  Table products {
+    id int [pk, increment] // Primary key
+    name varchar
+    description text
+    price decimal
+    stock int
+    created_at timestamp [default: `current_timestamp`]
+    updated_at timestamp [default: `current_timestamp`]
+  }
 
-Table shopping_carts {
-  id int [pk, increment] // Primary key
-  user_id int [ref: > users.id]
-  created_at timestamp [default: `current_timestamp`]
-}
+  Table shopping_carts {
+    id int [pk, increment] // Primary key
+    user_id int [ref: > users.id]
+    created_at timestamp [default: `current_timestamp`]
+  }
 
-Table shopping_cart_items {
-  id int [pk, increment] // Primary key
-  cart_id int [ref: > shopping_carts.id]
-  product_id int [ref: > products.id]
-  quantity int
-  price_at_purchase decimal
-}
+  Table shopping_cart_items {
+    id int [pk, increment] // Primary key
+    cart_id int [ref: > shopping_carts.id]
+    product_id int [ref: > products.id]
+    quantity int
+    price_at_purchase decimal
+  }
 
-Table payments {
-  id int [pk, increment] // Primary key
-  user_id int [ref: > users.id]
-  cart_id int [ref: > shopping_carts.id]
-  payment_gateway varchar // e.g., Stripe, PayPal
-  amount decimal
-  status varchar // e.g., pending, completed, failed
-  created_at timestamp [default: `current_timestamp`]
-}
+  Table payments {
+    id int [pk, increment] // Primary key
+    user_id int [ref: > users.id]
+    cart_id int [ref: > shopping_carts.id]
+    payment_gateway varchar // e.g., Stripe, PayPal
+    amount decimal
+    status varchar // e.g., pending, completed, failed
+    created_at timestamp [default: `current_timestamp`]
+  }
 
 
-// open with https://dbdiagram.io
+  // open with https://dbdiagram.io

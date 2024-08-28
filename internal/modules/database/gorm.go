@@ -3,7 +3,7 @@ package database
 import (
 	"log"
 
-	domain "github.com/muhammadsaefulr/escommerce/internal/domain/entity"
+	entity "github.com/muhammadsaefulr/escommerce/internal/domain/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,6 +15,6 @@ func NewGormDB() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&domain.User{})
+	db.AutoMigrate(&entity.User{}, &entity.ProductItems{})
 	return db
 }

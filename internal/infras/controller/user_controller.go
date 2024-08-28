@@ -28,7 +28,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	hashedPass, err := auth.HashBcryprPassword(user.Password)
+	hashedPass, err := auth.HashBcryptPassword(user.Password)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

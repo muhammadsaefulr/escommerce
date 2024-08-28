@@ -9,6 +9,7 @@ import (
 func main() {
 	db := database.NewGormDB()
 	userController := di.InitUserController(db)
-	r := router.SetupRouter(userController)
+	productController := di.InitProductController(db)
+	r := router.SetupRouter(userController, productController)
 	r.Run()
 }

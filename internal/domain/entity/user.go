@@ -12,10 +12,14 @@ type User struct {
 	Created_at time.Time `json:"created_at"`
 }
 
+// Type Struct For Promise Method
+
 type AuthLoginUser struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+// Type Interface For Functions
 
 type UserRepository interface {
 	AuthLoginUser(login *AuthLoginUser) (*User, error)
