@@ -28,6 +28,14 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
+	hashedPass, err := auth.HashBcryprPassword(user.Password)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	user.Password = hashedPass
+
 	result, err := c.service.CreateUser(&user)
 
 	if err != nil {
@@ -55,6 +63,11 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+	}
+
+	if !auth.CheckBcryptPassword(login.Password, getUser.Password) {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid User Password !"})
+		return
 	}
 
 	token, err := auth.GenerateJwtToken(getUser.Name)

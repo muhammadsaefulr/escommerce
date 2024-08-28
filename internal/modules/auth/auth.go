@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Claims struct {
@@ -13,6 +14,16 @@ type Claims struct {
 }
 
 var JwtKey = []byte(os.Getenv("JWT_SECRET_KEY"))
+
+func HashBcryprPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckBcryptPassword(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 func GenerateJwtToken(username string) (string, error) {
 	expirateTime := time.Now().Add(5 * time.Minute).Unix()
