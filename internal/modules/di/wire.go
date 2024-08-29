@@ -1,19 +1,27 @@
 package di
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/controller"
+	CpController "github.com/muhammadsaefulr/escommerce/internal/infras/controller/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/repository"
+	CpRepository "github.com/muhammadsaefulr/escommerce/internal/infras/repository/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/service"
-
+	CpService "github.com/muhammadsaefulr/escommerce/internal/infras/service/product"
 	"gorm.io/gorm"
 )
+
+func ProvideValidator() *validator.Validate {
+	return validator.New()
+}
 
 func InitUserController(db *gorm.DB) *controller.UserController {
 	wire.Build(
 		repository.NewUserRepository,
 		service.NewUserService,
 		controller.NewUserController,
+		ProvideValidator,
 	)
 	return &controller.UserController{}
 }
@@ -23,7 +31,18 @@ func InitProductController(db *gorm.DB) *controller.ProductController {
 		repository.NewProductRepository,
 		service.NewProductService,
 		controller.NewProductController,
+		ProvideValidator,
 	)
 
 	return &controller.ProductController{}
+}
+
+func InitCategoryProductController(db *gorm.DB) *CpController.CategoryController {
+	wire.Build(
+		CpRepository.NewCategoryRepository,
+		CpService.NewCategoryService,
+		CpController.NewCategoryController,
+		ProvideValidator,
+	)
+	return &CpController.CategoryController{}
 }

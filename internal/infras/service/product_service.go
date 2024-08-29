@@ -19,3 +19,11 @@ func (s *ProductService) AddProductItems(product *entity.ProductItems) (*entity.
 func (s *ProductService) GetProductItems(ID string) (*entity.ProductItems, error) {
 	return s.productRepo.GetProductItems(ID)
 }
+
+func (s *ProductService) UpdateProductItems(ID string, product *entity.ProductItems) (*entity.ProductItems, error) {
+	return s.productRepo.UpdateProductItems(ID, product)
+}
+
+func (s *ProductService) DeleteProductItems(ID string) error {
+	return s.productRepo.DeleteProductItems(ID)
+}

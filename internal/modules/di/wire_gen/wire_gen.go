@@ -7,9 +7,13 @@
 package di
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/controller"
+	controller2 "github.com/muhammadsaefulr/escommerce/internal/infras/controller/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/repository"
+	repository2 "github.com/muhammadsaefulr/escommerce/internal/infras/repository/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/service"
+	service2 "github.com/muhammadsaefulr/escommerce/internal/infras/service/product"
 	"gorm.io/gorm"
 )
 
@@ -18,13 +22,29 @@ import (
 func InitUserController(db *gorm.DB) *controller.UserController {
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
-	userController := controller.NewUserController(userService)
+	validate := ProvideValidator()
+	userController := controller.NewUserController(userService, validate)
 	return userController
 }
 
 func InitProductController(db *gorm.DB) *controller.ProductController {
 	productRepository := repository.NewProductRepository(db)
 	productService := service.NewProductService(productRepository)
-	productController := controller.NewProductController(productService)
+	validate := ProvideValidator()
+	productController := controller.NewProductController(productService, validate)
 	return productController
+}
+
+func InitCategoryProductController(db *gorm.DB) *controller2.CategoryController {
+	categoryRepository := repository2.NewCategoryRepository(db)
+	categoryService := service2.NewCategoryService(categoryRepository)
+	validate := ProvideValidator()
+	categoryController := controller2.NewCategoryController(categoryService, validate)
+	return categoryController
+}
+
+// wire.go:
+
+func ProvideValidator() *validator.Validate {
+	return validator.New()
 }

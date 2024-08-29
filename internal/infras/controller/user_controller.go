@@ -6,18 +6,21 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/muhammadsaefulr/escommerce/internal/domain/entity"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/service"
 	"github.com/muhammadsaefulr/escommerce/internal/modules/auth"
+	validator_format "github.com/muhammadsaefulr/escommerce/internal/modules/validator"
 	"gorm.io/gorm"
 )
 
 type UserController struct {
-	service *service.UserService
+	service  *service.UserService
+	validate *validator.Validate
 }
 
-func NewUserController(service *service.UserService) *UserController {
-	return &UserController{service: service}
+func NewUserController(service *service.UserService, validate *validator.Validate) *UserController {
+	return &UserController{service: service, validate: validate}
 }
 
 func (c *UserController) CreateUser(ctx *gin.Context) {
@@ -25,6 +28,19 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.validate.Struct(user); err != nil {
+		errors := validator_format.FormatValidator(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
+		return
+	}
+
+	_, err := c.service.GetUserByEmail(user.Email)
+
+	if err == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "User With This Email Already Exist !"})
 		return
 	}
 
@@ -51,6 +67,13 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&login); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.validate.Struct(login); err != nil {
+		errors := validator_format.FormatValidator(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
+		return
 	}
 
 	getUser, err := c.service.AuthLoginUser(&login)
@@ -70,7 +93,7 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 		return
 	}
 
-	token, err := auth.GenerateJwtToken(getUser.Name)
+	token, err := auth.GenerateJwtToken(getUser.Email, getUser.Name)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -112,6 +135,12 @@ func (c *UserController) UpdateUserData(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Data Not Found In The Records !"})
+		return
+	}
+
+	if err := c.validate.Struct(user); err != nil {
+		errors := validator_format.FormatValidator(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
 		return
 	}
 

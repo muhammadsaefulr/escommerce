@@ -8,12 +8,13 @@ import (
 )
 
 type ProductItems struct {
-	ID                 uuid.UUID `json:"id" gorm:"type:uuid;primary_key"`
-	ProductName        string    `json:"name"`
-	ProductDescription string    `json:"description"`
-	ProductPrice       float32   `json:"price"`
-	Created_at         time.Time `json:"created_at"`
-	Updated_at         time.Time `json:"updated_at"`
+	ID                 uuid.UUID `json:"id" gorm:"type:uuid;primaryKey"`
+	ProductName        string    `json:"name" validate:"required"`
+	ProductDescription string    `json:"description" validate:"required"`
+	ProductPrice       float32   `json:"price" validate:"required"`
+	CreatedAt          time.Time `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt          time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	CategoryId         uint      `json:"category_id" gorm:"not null"`
 }
 
 func (base *ProductItems) BeforeCreate(db *gorm.DB) error {
@@ -35,6 +36,6 @@ func (base *ProductItems) BeforeCreate(db *gorm.DB) error {
 type ProductRepository interface {
 	AddProductItems(product *ProductItems) (*ProductItems, error)
 	GetProductItems(ID string) (*ProductItems, error)
-	// UpdateProductItems(ID string, product *ProductItems) (*ProductItems, error)
-	// DeleteProductItems(ID string) error
+	UpdateProductItems(ID string, product *ProductItems) (*ProductItems, error)
+	DeleteProductItems(ID string) error
 }

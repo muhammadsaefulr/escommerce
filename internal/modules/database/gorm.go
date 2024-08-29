@@ -4,6 +4,7 @@ import (
 	"log"
 
 	entity "github.com/muhammadsaefulr/escommerce/internal/domain/entity"
+	"github.com/muhammadsaefulr/escommerce/internal/modules/database/seed"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,26 @@ func NewGormDB() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&entity.User{}, &entity.ProductItems{})
+	db.AutoMigrate(&entity.User{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
+	db.AutoMigrate(&entity.CategoryProduct{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
+	db.AutoMigrate(&entity.ProductItems{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
+	seed.SeedCategories(db)
+	seed.SeedProducts(db)
+
 	return db
 }

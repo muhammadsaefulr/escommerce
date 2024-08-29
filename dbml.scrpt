@@ -6,8 +6,17 @@
     created_at timestamp [default: `current_timestamp`]
   }
 
+  Table category_product {
+    id int [pk, increment] // Primary key
+    category_name string
+    category_description string
+    created_at timestamp [default: `current_timestamp`]
+    updated_at timestamp [default: `current_timestamp`]
+  }
+
   Table products {
     id int [pk, increment] // Primary key
+    category_id string [ref: > category_product.id]
     name varchar
     description text
     price decimal
@@ -42,3 +51,5 @@
 
 
   // open with https://dbdiagram.io
+
+Ref: "category_product"."id" < "category_product"."category_name"

@@ -10,6 +10,7 @@ import (
 
 type Claims struct {
 	Username string `json:"username"`
+	Email    string `json:"email"`
 	jwt.StandardClaims
 }
 
@@ -25,12 +26,16 @@ func CheckBcryptPassword(password, hash string) bool {
 	return err == nil
 }
 
-func GenerateJwtToken(username string) (string, error) {
+func GenerateJwtToken(email, username string) (string, error) {
 	expirateTime := time.Now().Add(5 * time.Minute).Unix()
 
-	claims := &jwt.StandardClaims{
-		ExpiresAt: expirateTime,
-		Issuer:    username,
+	claims := Claims{
+		Username: username,
+		Email:    email,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirateTime,
+			Issuer:    email,
+		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
