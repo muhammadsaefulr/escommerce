@@ -4,11 +4,15 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/wire"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/controller"
+	CartController "github.com/muhammadsaefulr/escommerce/internal/infras/controller/cart"
 	CpController "github.com/muhammadsaefulr/escommerce/internal/infras/controller/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/repository"
+	CartRepository "github.com/muhammadsaefulr/escommerce/internal/infras/repository/cart"
 	CpRepository "github.com/muhammadsaefulr/escommerce/internal/infras/repository/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/service"
+	CartService "github.com/muhammadsaefulr/escommerce/internal/infras/service/cart"
 	CpService "github.com/muhammadsaefulr/escommerce/internal/infras/service/product"
+
 	"gorm.io/gorm"
 )
 
@@ -45,4 +49,14 @@ func InitCategoryProductController(db *gorm.DB) *CpController.CategoryController
 		ProvideValidator,
 	)
 	return &CpController.CategoryController{}
+}
+
+func InitShoppingCartController(db *gorm.DB) *CartController.ShoppingCartController {
+	wire.Build(
+		CartRepository.NewShoppingCartRepository,
+		CartService.NewShoppingCartService,
+		CartController.NewShoppingCartController,
+		ProvideValidator,
+	)
+	return &CartController.ShoppingCartController{}
 }

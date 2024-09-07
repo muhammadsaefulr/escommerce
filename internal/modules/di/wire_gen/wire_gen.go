@@ -9,10 +9,13 @@ package di
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/controller"
+	controller3 "github.com/muhammadsaefulr/escommerce/internal/infras/controller/cart"
 	controller2 "github.com/muhammadsaefulr/escommerce/internal/infras/controller/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/repository"
+	repository3 "github.com/muhammadsaefulr/escommerce/internal/infras/repository/cart"
 	repository2 "github.com/muhammadsaefulr/escommerce/internal/infras/repository/product"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/service"
+	service3 "github.com/muhammadsaefulr/escommerce/internal/infras/service/cart"
 	service2 "github.com/muhammadsaefulr/escommerce/internal/infras/service/product"
 	"gorm.io/gorm"
 )
@@ -41,6 +44,14 @@ func InitCategoryProductController(db *gorm.DB) *controller2.CategoryController 
 	validate := ProvideValidator()
 	categoryController := controller2.NewCategoryController(categoryService, validate)
 	return categoryController
+}
+
+func InitShoppingCartController(db *gorm.DB) *controller3.ShoppingCartController {
+	shoppingCartRepository := repository3.NewShoppingCartRepository(db)
+	shoppingCartService := service3.NewShoppingCartService(shoppingCartRepository)
+	validate := ProvideValidator()
+	shoppingCartController := controller3.NewShoppingCartController(shoppingCartService, validate)
+	return shoppingCartController
 }
 
 // wire.go:

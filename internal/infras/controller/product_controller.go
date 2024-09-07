@@ -66,7 +66,14 @@ func (c *ProductController) UpdateProductItems(ctx *gin.Context) {
 		return
 	}
 
-	product, err := c.service.UpdateProductItems(idProduct, product)
+	getProduct, err := c.service.GetProductItems(idProduct)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	product, err = c.service.UpdateProductItems(idProduct, getProduct, product)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

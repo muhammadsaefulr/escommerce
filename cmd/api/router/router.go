@@ -4,10 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/muhammadsaefulr/escommerce/cmd/api/middleware"
 	"github.com/muhammadsaefulr/escommerce/internal/infras/controller"
+	CartController "github.com/muhammadsaefulr/escommerce/internal/infras/controller/cart"
 	CpController "github.com/muhammadsaefulr/escommerce/internal/infras/controller/product"
 )
 
-func SetupRouter(UserController *controller.UserController, ProductController *controller.ProductController, CategoryProductController *CpController.CategoryController) *gin.Engine {
+func SetupRouter(UserController *controller.UserController, ProductController *controller.ProductController, CategoryProductController *CpController.CategoryController, CartController *CartController.ShoppingCartController) *gin.Engine {
 	r := gin.Default()
 
 	RouterApiGroup := r.Group("/api")
@@ -33,6 +34,10 @@ func SetupRouter(UserController *controller.UserController, ProductController *c
 				CategoryProductGroup.GET("/get/:id", CategoryProductController.GetCategoryById)
 				CategoryProductGroup.PUT("/update/:id", CategoryProductController.UpdateCategoryData)
 			}
+		}
+		ShoppingCartGroup := RouterApiGroup.Group("/cart/")
+		{
+			ShoppingCartGroup.POST("/add", CartController.AddShoppingCart)
 		}
 	}
 

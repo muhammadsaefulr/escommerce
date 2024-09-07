@@ -29,9 +29,9 @@ func (r *ProductRepositoryImpl) GetProductItems(ID string) (*entity.ProductItems
 	return &product, err
 }
 
-func (r *ProductRepositoryImpl) UpdateProductItems(ID string, product *entity.ProductItems) (*entity.ProductItems, error) {
+func (r *ProductRepositoryImpl) UpdateProductItems(ID string, product *entity.ProductItems, updatedProduct *entity.ProductItems) (*entity.ProductItems, error) {
 
-	err := r.DB.Model(&entity.ProductItems{}).Where("ID = ?", ID).Save(&product).Error
+	err := r.DB.Model(&product).Where("ID = ?", ID).Updates(updatedProduct).Error
 
 	return product, err
 }

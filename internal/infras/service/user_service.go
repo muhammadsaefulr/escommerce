@@ -21,7 +21,7 @@ func (s *UserService) CreateUser(user *domain.User) (*domain.User, error) {
 	return s.userRepo.CreateUser(user)
 }
 
-func (s *UserService) GetUserById(id int) (*domain.User, error) {
+func (s *UserService) GetUserById(id string) (*domain.User, error) {
 	return s.userRepo.GetUserById(id)
 }
 
@@ -29,10 +29,10 @@ func (s *UserService) GetUserByEmail(email string) (*domain.User, error) {
 	return s.userRepo.GetUserByEmail(email)
 }
 
-func (s *UserService) UpdateUserData(id int, user *domain.User) error {
+func (s *UserService) UpdateUserData(id string, user *domain.User) error {
 	return s.userRepo.UpdateUserData(id, user)
 }
 
-func (s *UserService) DeleteUserById(id int) error {
+func (s *UserService) DeleteUserById(id string) error {
 	return s.userRepo.DeleteUserById(id)
 }

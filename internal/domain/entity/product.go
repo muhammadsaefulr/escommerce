@@ -36,6 +36,6 @@ func (base *ProductItems) BeforeCreate(db *gorm.DB) error {
 type ProductRepository interface {
 	AddProductItems(product *ProductItems) (*ProductItems, error)
 	GetProductItems(ID string) (*ProductItems, error)
-	UpdateProductItems(ID string, product *ProductItems) (*ProductItems, error)
+	UpdateProductItems(ID string, product *ProductItems, updatedProduct *ProductItems) (*ProductItems, error)
 	DeleteProductItems(ID string) error
 }

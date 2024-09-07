@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -105,11 +104,7 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 }
 
 func (c *UserController) GetUserById(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	id := ctx.Param("id")
 
 	result, err := c.service.GetUserById(id)
 	if err != nil {
@@ -124,14 +119,9 @@ func (c *UserController) GetUserById(ctx *gin.Context) {
 func (c *UserController) UpdateUserData(ctx *gin.Context) {
 	var user *entity.User
 
-	id, err := strconv.Atoi(ctx.Param("id"))
+	id := ctx.Param("id")
 
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid Params id !"})
-		return
-	}
-
-	userDb, err := c.service.GetUserById(id)
+	_, err := c.service.GetUserById(id)
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Data Not Found In The Records !"})
@@ -149,7 +139,7 @@ func (c *UserController) UpdateUserData(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.UpdateUserData(int(userDb.ID), user); err != nil {
+	if err := c.service.UpdateUserData(id, user); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
@@ -159,20 +149,16 @@ func (c *UserController) UpdateUserData(ctx *gin.Context) {
 }
 
 func (c *UserController) DeleteUserById(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+	id := ctx.Param("id")
 
-	userDb, err := c.service.GetUserById(id)
+	_, err := c.service.GetUserById(id)
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "Data Not Found In The Records !"})
 		return
 	}
 
-	if err := c.service.DeleteUserById(int(userDb.ID)); err != nil {
+	if err := c.service.DeleteUserById(id); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

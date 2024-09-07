@@ -36,7 +36,7 @@ func (r *UserRepositoryImpl) GetUserByEmail(email string) (*entity.User, error) 
 	return &user, err
 }
 
-func (r *UserRepositoryImpl) GetUserById(id int) (*entity.User, error) {
+func (r *UserRepositoryImpl) GetUserById(id string) (*entity.User, error) {
 	var user entity.User
 
 	err := r.DB.Where("ID = ?", id).First(&user).Error
@@ -44,12 +44,12 @@ func (r *UserRepositoryImpl) GetUserById(id int) (*entity.User, error) {
 	return &user, err
 }
 
-func (r *UserRepositoryImpl) UpdateUserData(id int, user *entity.User) error {
+func (r *UserRepositoryImpl) UpdateUserData(id string, user *entity.User) error {
 
 	return r.DB.Where("id = ?", id).Updates(&user).Error
 }
 
-func (r *UserRepositoryImpl) DeleteUserById(id int) error {
+func (r *UserRepositoryImpl) DeleteUserById(id string) error {
 
 	return r.DB.Delete(&entity.User{}, id).Error
 }

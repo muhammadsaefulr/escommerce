@@ -2,15 +2,32 @@ package entity
 
 import (
 	"time"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type User struct {
-	ID        uint      `gorm:"primary_key"`
+	ID        uuid.UUID `gorm:"primary_key"`
 	Name      string    `json:"name" validate:"required,min=3,max=75"`
 	Email     string    `json:"email" gorm:"unique" validate:"required,email,min=1,max=100"`
 	Password  string    `json:"password" validate:"required,min=3"`
+	RoleId    int       `json:"role_id" validate:"required"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+}
+
+func (base *User) BeforeCreate(db *gorm.DB) error {
+	uuids, err := uuid.NewV6()
+	if err != nil {
+		return err
+	}
+
+	if base.ID == uuid.Nil {
+		base.ID = uuids
+	}
+
+	return nil
 }
 
 // Type Struct For Promise Method
@@ -26,7 +43,7 @@ type UserRepository interface {
 	AuthLoginUser(login *AuthLoginUser) (*User, error)
 	CreateUser(user *User) (*User, error)
 	GetUserByEmail(email string) (*User, error)
-	GetUserById(id int) (*User, error)
-	UpdateUserData(id int, user *User) error
-	DeleteUserById(id int) error
+	GetUserById(id string) (*User, error)
+	UpdateUserData(id string, user *User) error
+	DeleteUserById(id string) error
 }

@@ -16,6 +16,12 @@ func NewGormDB() *gorm.DB {
 		log.Fatal(err)
 	}
 
+	db.AutoMigrate(&entity.UserRole{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
 	db.AutoMigrate(&entity.User{})
 
 	if err != nil {
@@ -34,6 +40,8 @@ func NewGormDB() *gorm.DB {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 
+	seed.SeedRole(db)
+	seed.SeedUser(db)
 	seed.SeedCategories(db)
 	seed.SeedProducts(db)
 

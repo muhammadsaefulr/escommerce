@@ -20,8 +20,8 @@ func (s *ProductService) GetProductItems(ID string) (*entity.ProductItems, error
 	return s.productRepo.GetProductItems(ID)
 }
 
-func (s *ProductService) UpdateProductItems(ID string, product *entity.ProductItems) (*entity.ProductItems, error) {
-	return s.productRepo.UpdateProductItems(ID, product)
+func (s *ProductService) UpdateProductItems(ID string, product *entity.ProductItems, updatedProduct *entity.ProductItems) (*entity.ProductItems, error) {
+	return s.productRepo.UpdateProductItems(ID, product, updatedProduct)
 }
 
 func (s *ProductService) DeleteProductItems(ID string) error {

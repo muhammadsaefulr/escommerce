@@ -11,6 +11,7 @@ func main() {
 	userController := di.InitUserController(db)
 	productController := di.InitProductController(db)
 	categoryProductController := di.InitCategoryProductController(db)
-	r := router.SetupRouter(userController, productController, categoryProductController)
+	cartController := di.InitShoppingCartController(db)
+	r := router.SetupRouter(userController, productController, categoryProductController, cartController)
 	r.Run()
 }
