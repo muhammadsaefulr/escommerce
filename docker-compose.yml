@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: epul
+      POSTGRES_PASSWORD: epul123
+      POSTGRES_DB: escommerce_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./dbshell:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U epul -d escommerce_db"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+  web:
+    build: .
+    command: ["./main"]
+    volumes:
+      - api_volume:/usr/src/app/
+      - go_cache:/go/pkg/mod
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: epul
+      DB_PASSWORD: epul123
+      DB_NAME: escommerce_db
+      DB_PORT: 5432
+
+volumes:
+  postgres_data:
+  api_volume:
+  go_cache:

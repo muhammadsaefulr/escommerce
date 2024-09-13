@@ -1,8 +1,11 @@
 package database
 
 import (
+	"fmt"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	entity "github.com/muhammadsaefulr/escommerce/internal/domain/entity"
 	"github.com/muhammadsaefulr/escommerce/internal/modules/database/seed"
 	"gorm.io/driver/postgres"
@@ -10,7 +13,20 @@ import (
 )
 
 func NewGormDB() *gorm.DB {
-	dsn := "user=saepul password=epul123 dbname=escommerce_db port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", user, password, dbname, host, port)
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
