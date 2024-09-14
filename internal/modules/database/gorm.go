@@ -7,6 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	entity "github.com/muhammadsaefulr/escommerce/internal/domain/entity"
+
 	"github.com/muhammadsaefulr/escommerce/internal/modules/database/seed"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -44,6 +45,24 @@ func NewGormDB() *gorm.DB {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 
+	db.AutoMigrate(&entity.ShoppingCart{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
+	db.AutoMigrate(&entity.ShoppingCartItems{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
+	db.AutoMigrate(&entity.UserSeller{})
+
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+	}
+
 	db.AutoMigrate(&entity.CategoryProduct{})
 
 	if err != nil {
@@ -59,7 +78,7 @@ func NewGormDB() *gorm.DB {
 	seed.SeedRole(db)
 	seed.SeedUser(db)
 	seed.SeedCategories(db)
-	seed.SeedProducts(db)
+	// seed.SeedProducts(db)
 
 	return db
 }

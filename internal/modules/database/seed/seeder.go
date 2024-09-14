@@ -94,7 +94,6 @@ func SeedProducts(db *gorm.DB) {
 
 	products := []entity.ProductItems{
 		{
-			ID:                 uuid.New(),
 			ProductName:        "Smartphone",
 			ProductDescription: "Latest model smartphone with high-end specs",
 			ProductPrice:       699.99,
@@ -103,7 +102,6 @@ func SeedProducts(db *gorm.DB) {
 			CategoryId:         categoryMap["Electronics"],
 		},
 		{
-			ID:                 uuid.New(),
 			ProductName:        "Novel Book",
 			ProductDescription: "A thrilling novel by a best-selling author",
 			ProductPrice:       19.99,
@@ -119,7 +117,7 @@ func SeedProducts(db *gorm.DB) {
 			log.Fatalf("failed to check existing product: %v", err)
 		}
 
-		if existingProduct.ID == uuid.Nil {
+		if existingProduct.ID == "" {
 			result := db.Create(&product)
 			if result.Error != nil {
 				log.Fatalf("failed to seed products: %v", result.Error)

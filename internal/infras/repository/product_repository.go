@@ -21,12 +21,28 @@ func (r *ProductRepositoryImpl) AddProductItems(product *entity.ProductItems) (*
 	return product, err
 }
 
+func (r *ProductRepositoryImpl) GetAllProduct() ([]entity.ProductItems, error) {
+	var product []entity.ProductItems
+
+	err := r.DB.Preload("Seller").Find(&product).Error
+
+	return product, err
+}
+
 func (r *ProductRepositoryImpl) GetProductItems(ID string) (*entity.ProductItems, error) {
 	var product entity.ProductItems
 
 	err := r.DB.Where("ID = ?", ID).First(&product).Error
 
 	return &product, err
+}
+
+func (r *ProductRepositoryImpl) GetSellerById(ID string) (*entity.UserSeller, error) {
+	var seller entity.UserSeller
+
+	err := r.DB.Where("ID = ?", ID).First(&seller).Error
+
+	return &seller, err
 }
 
 func (r *ProductRepositoryImpl) UpdateProductItems(ID string, product *entity.ProductItems, updatedProduct *entity.ProductItems) (*entity.ProductItems, error) {

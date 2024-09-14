@@ -1,25 +1,28 @@
 package entity
 
 import (
-	"github.com/google/uuid"
+	"log"
+
+	"github.com/muhammadsaefulr/escommerce/scripts"
 	"gorm.io/gorm"
 )
 
 type ShoppingCart struct {
-	ID                uuid.UUID           `gorm:"primary_key"`
-	UserId            int                 `json:"user_id"`
-	ShoppingCartItems []ShoppingCartItems `json:"shopping_cart_items",gorm:"foreignKey:CartId"`
+	ID                string              `json:"id" gorm:"primaryKey"`
+	UserId            string              `json:"user_id" validate:"required" gorm:"type:uuid"`
+	ShoppingCartItems []ShoppingCartItems `json:"shopping_cart_items" gorm:"foreignKey:CartId"`
 }
 
-func (base *ShoppingCart) BeforeCreate(db *gorm.DB) error {
+func (s *ShoppingCart) BeforeCreate(tx *gorm.DB) (err error) {
+	generatedHex, err := scripts.GenerateUniqueHexId3B()
 
-	uuids, err := uuid.NewV6()
 	if err != nil {
+		log.Fatalf(err.Error())
 		return err
 	}
 
-	if base.ID == uuid.Nil {
-		base.ID = uuids
+	if s.ID == "" {
+		s.ID = generatedHex
 	}
 
 	return nil
@@ -28,8 +31,12 @@ func (base *ShoppingCart) BeforeCreate(db *gorm.DB) error {
 // type Interface For Function
 
 type ShoppingCartRepository interface {
-	AddShoppingCart(cart *ShoppingCart) (*ShoppingCart, error)
 	UpdateShoppingCart(ID string, cart *ShoppingCart) (*ShoppingCart, error)
 	GetShoppingCartById(ID string) (*ShoppingCart, error)
 	DeleteShoppingCart(ID string) error
+
+	GetShoppingCartItemById(cartID string, productId string) (*ShoppingCartItems, error)
+	AddShoppingCartItem(cartItem *ShoppingCartItems) (*ShoppingCartItems, error)
+	UpdateShoppingCartItem(cartID string, cartItem *ShoppingCartItems) (*ShoppingCartItems, error)
+	DeleteShoppingCartItem(cartID string) error
 }

@@ -28,8 +28,16 @@ func (c *ProductController) AddProductItems(ctx *gin.Context) {
 	}
 
 	if err := c.validate.Struct(product); err != nil {
+		log.Println(product)
 		errors := validator_format.FormatValidator(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
+		return
+	}
+
+	_, err := c.service.GetSellerById(product.SellerId.String())
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Seller User Dengan ID Tersebut Tidak Ditemukan !"})
 		return
 	}
 
@@ -39,7 +47,28 @@ func (c *ProductController) AddProductItems(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Berhasil Membuat Product !", "data": result})
+	filteredResult := entity.FilteredProductReturn{
+		ID:        result.ID,
+		CreatedAt: result.CreatedAt,
+		UpdatedAt: result.UpdatedAt,
+		Name:      result.ProductName,
+		Price:     result.ProductPrice,
+		SellerID:  result.SellerId,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Berhasil Membuat Product !", "data": filteredResult})
+}
+
+func (c *ProductController) GetAllProduct(ctx *gin.Context) {
+	result, err := c.service.GetAllProduct()
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Berhasil Mengambil Semua Data !", "data": result})
+
 }
 
 func (c *ProductController) GetProductItems(ctx *gin.Context) {
@@ -94,7 +123,7 @@ func (c *ProductController) DeleteProductItems(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.service.DeleteProductItems(product.ID.String()); err != nil {
+	if err := c.service.DeleteProductItems(product.ID); err != nil {
 
 		log.Println("error deleting product exceeds", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

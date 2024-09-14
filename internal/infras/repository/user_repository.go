@@ -15,9 +15,19 @@ func NewUserRepository(DB *gorm.DB) entity.UserRepository {
 
 func (r *UserRepositoryImpl) CreateUser(user *entity.User) (*entity.User, error) {
 
-	err := r.DB.Create(user).Error
+	if err := r.DB.Create(user).Error; err != nil {
+		return nil, err
+	}
 
-	return user, err
+	cart := entity.ShoppingCart{
+		UserId: user.ID.String(),
+	}
+
+	if err := r.DB.Create(&cart).Error; err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (r *UserRepositoryImpl) AuthLoginUser(loginEntity *entity.AuthLoginUser) (*entity.User, error) {

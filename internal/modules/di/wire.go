@@ -30,6 +30,16 @@ func InitUserController(db *gorm.DB) *controller.UserController {
 	return &controller.UserController{}
 }
 
+func InitUserSellerController(db *gorm.DB) *controller.UserSellerController {
+	wire.Build(
+		repository.NewUserSellerRepository,
+		service.NewUserSellerService,
+		controller.NewUserSellerController,
+		ProvideValidator,
+	)
+	return &controller.UserSellerController{}
+}
+
 func InitProductController(db *gorm.DB) *controller.ProductController {
 	wire.Build(
 		repository.NewProductRepository,
