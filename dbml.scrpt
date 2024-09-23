@@ -1,3 +1,4 @@
+// dbdiagram.io scripts
   Table Role {
     id int [pk, increment] // Primary key
     role_name varchar

@@ -61,5 +61,5 @@ func (r *UserRepositoryImpl) UpdateUserData(id string, user *entity.User) error 
 
 func (r *UserRepositoryImpl) DeleteUserById(id string) error {
 
-	return r.DB.Delete(&entity.User{}, id).Error
+	return r.DB.Where("id = ? ", id).Delete(&entity.User{}).Error
 }

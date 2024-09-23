@@ -12,7 +12,7 @@ type User struct {
 	Name      string    `json:"name" validate:"required,min=3,max=75"`
 	Email     string    `json:"email" gorm:"unique" validate:"required,email,min=1,max=100"`
 	Password  string    `json:"password" validate:"required,min=3"`
-	RoleId    int       `json:"role_id" validate:"required"`
+	RoleId    int       `json:"role_id" gorm:"default:2"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
@@ -33,6 +33,12 @@ func (base *User) BeforeCreate(db *gorm.DB) error {
 // Type Struct For Promise Method
 
 type AuthLoginUser struct {
+	Email    string `json:"email" validate:"required,min=8"`
+	Password string `json:"password" validate:"required,min=3"`
+}
+
+type AuthRegisterUser struct {
+	Name     string `json:"name" validate:"required,min=2"`
 	Email    string `json:"email" validate:"required,min=8"`
 	Password string `json:"password" validate:"required,min=3"`
 }
