@@ -20,6 +20,14 @@ type ProductItems struct {
 	Seller             UserSeller `json:"seller,omitempty" validate:"-", gorm:"foreignKey:SellerId;embedded"`
 }
 
+type AddProductItems struct {
+	ProductName        string  `json:"name" validate:"required"`
+	ProductDescription string  `json:"description" validate:"required"`
+	ProductPrice       float32 `json:"price" validate:"required"`
+	SellerId           string  `json:"seller_id"`
+	CategoryId         uint    `json:"category_id" validate:"required"`
+}
+
 type FilteredProductReturn struct {
 	ID        string     `json:"id"`
 	CreatedAt time.Time  `json:"created_at"`

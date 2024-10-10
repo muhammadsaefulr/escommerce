@@ -9,36 +9,10 @@ import (
 	"testing"
 
 	"log"
-	"os"
 
-	"github.com/muhammadsaefulr/escommerce/cmd/api/router"
 	"github.com/muhammadsaefulr/escommerce/internal/domain/entity"
-	"github.com/muhammadsaefulr/escommerce/internal/modules/database"
-	di "github.com/muhammadsaefulr/escommerce/internal/modules/di/wire_gen"
 	"github.com/stretchr/testify/assert"
 )
-
-var r http.Handler
-var jwtToken string
-var userId string
-
-func TestMain(m *testing.M) {
-	db := database.NewGormDB()
-	if db == nil {
-		log.Fatal("failed to connect to database")
-	}
-
-	userController := di.InitUserController(db)
-	userSellerController := di.InitUserSellerController(db)
-	productController := di.InitProductController(db)
-	categoryProductController := di.InitCategoryProductController(db)
-	cartController := di.InitShoppingCartController(db)
-
-	r = router.SetupRouter(userController, userSellerController, productController, categoryProductController, cartController)
-
-	code := m.Run()
-	os.Exit(code)
-}
 
 func TestRegisterUserCustomer(t *testing.T) {
 	userRegisterPayload := entity.AuthRegisterUser{
@@ -48,14 +22,11 @@ func TestRegisterUserCustomer(t *testing.T) {
 	}
 
 	jsonValue, err := json.Marshal(userRegisterPayload)
-	if err != nil {
-		t.Fatalf("Failed to marshal JSON payload: %v", err)
-	}
+	assert.NoError(t, err, "Failed to marshal JSON payload")
 
 	req, err := http.NewRequest("POST", "/api/user/register", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		t.Fatalf("Failed to create request: %v", err)
-	}
+	assert.NoError(t, err, "Failed to create request")
+
 	req.Header.Set("Content-Type", "application/json")
 
 	w := httptest.NewRecorder()
@@ -68,9 +39,7 @@ func TestRegisterUserCustomer(t *testing.T) {
 		Message string      `json:"message"`
 	}
 	err = json.Unmarshal(w.Body.Bytes(), &response)
-	if err != nil {
-		t.Fatalf("Failed to unmarshal response: %v", err)
-	}
+	assert.NoError(t, err, "Failed to unmarshal response")
 
 	userRegisterTest := response.Data
 	assert.NotEmpty(t, userRegisterTest.ID, "User ID should not be empty")
@@ -88,14 +57,10 @@ func TestLoginUserCustomer(t *testing.T) {
 	}
 
 	jsonValue, err := json.Marshal(userPayload)
-	if err != nil {
-		t.Fatalf("Failed to marshal JSON payload: %v", err)
-	}
+	assert.NoError(t, err, "Failed to marshal JSON payload")
 
 	req, err := http.NewRequest("POST", "/api/user/auth/login", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		t.Fatalf("Failed to create request: %v", err)
-	}
+	assert.NoError(t, err, "Failed to create request")
 	req.Header.Set("Content-Type", "application/json")
 
 	w := httptest.NewRecorder()
@@ -105,9 +70,7 @@ func TestLoginUserCustomer(t *testing.T) {
 
 	var response map[string]string
 	err = json.Unmarshal(w.Body.Bytes(), &response)
-	if err != nil {
-		t.Fatalf("Failed to unmarshal response: %v", err)
-	}
+	assert.NoError(t, err, "Failed to unmarshal response")
 
 	jwtToken = response["jwtToken"]
 
@@ -115,14 +78,10 @@ func TestLoginUserCustomer(t *testing.T) {
 }
 
 func TestDeleteUserCustomer(t *testing.T) {
-
 	params := fmt.Sprintf("/api/user/delete/%s", userId)
 
 	req, err := http.NewRequest("DELETE", params, nil)
-
-	if err != nil {
-		t.Fatalf("Failed to run request: %v", err)
-	}
+	assert.NoError(t, err, "Failed to create request")
 	req.Header.Set("Authorization", "Bearer "+jwtToken)
 
 	w := httptest.NewRecorder()
