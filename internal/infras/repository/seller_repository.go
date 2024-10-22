@@ -20,18 +20,18 @@ func (r *UserSellerRepositoryImpl) CreateUserSeller(UserSeller *entity.UserSelle
 	return UserSeller, err
 }
 
-func (r *UserSellerRepositoryImpl) AuthLoginUserSeller(loginEntity *entity.AuthLoginUserSeller) (*entity.UserSeller, error) {
-	var UserSeller entity.UserSeller
+func (r *UserSellerRepositoryImpl) GetUserByUserEmail(email string) (*entity.User, error) {
+	var User entity.User
 
-	err := r.DB.Where("email = ?", loginEntity.Email).First(&UserSeller).Error
+	err := r.DB.First(&User, "email = ?", email).Error
 
-	return &UserSeller, err
+	return &User, err
 }
 
-func (r *UserSellerRepositoryImpl) GetUserSellerByEmail(email string) (*entity.UserSeller, error) {
+func (r *UserSellerRepositoryImpl) GetUserSellerByUserId(id string) (*entity.UserSeller, error) {
 	var UserSeller entity.UserSeller
 
-	err := r.DB.Where("email = ?", email).First(&UserSeller).Error
+	err := r.DB.First(&UserSeller, "user_id = ?", id).Error
 
 	return &UserSeller, err
 }

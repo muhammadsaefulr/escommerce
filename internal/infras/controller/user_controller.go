@@ -99,7 +99,13 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"jwtToken": token})
+	UserReturn := &entity.UserDataReturnViews{
+		Name:   getUser.Name,
+		Email:  getUser.Email,
+		RoleId: getUser.RoleId,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"jwtToken": token, "user_data": UserReturn})
 
 }
 

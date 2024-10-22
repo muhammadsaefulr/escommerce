@@ -9,9 +9,8 @@ import (
 
 type UserSeller struct {
 	ID        uuid.UUID      `gorm:"primaryKey;type:uuid" json:"id,omitempty"`
-	Name      string         `json:"name,omitempty" validate:"required,min=3,max=75"`
-	Email     string         `json:"email,omitempty" gorm:"unique" validate:"required,email,min=1,max=100"`
-	Password  string         `json:"password,omitempty" validate:"required,min=3"`
+	UserID    uuid.UUID      `gorm:"unique;not null" json:"user_id" validate:"required"` // Menghubungkan penjual dengan pengguna
+	NamaToko  string         `json:"nama_toko,omitempty" validate:"required,min=3,max=75"`
 	CreatedAt time.Time      `json:"created_at,omitempty" gorm:"autoCreateTime"`
 	UpdatedAt time.Time      `json:"updated_at,omitempty" gorm:"autoUpdateTime"`
 	Products  []ProductItems `gorm:"foreignKey:SellerId" json:"products,omitempty"`
@@ -40,10 +39,10 @@ type AuthLoginUserSeller struct {
 // Type Interface For Functions
 
 type UserSellerRepository interface {
-	AuthLoginUserSeller(login *AuthLoginUserSeller) (*UserSeller, error)
 	CreateUserSeller(UserSeller *UserSeller) (*UserSeller, error)
-	GetUserSellerByEmail(email string) (*UserSeller, error)
 	GetUserSellerById(id string) (*UserSeller, error)
+	GetUserSellerByUserId(id string) (*UserSeller, error)
+	GetUserByUserEmail(email string) (*User, error)
 	UpdateUserSellerData(id string, UserSeller *UserSeller) error
 	DeleteUserSellerById(id string) error
 }

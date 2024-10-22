@@ -13,10 +13,6 @@ func NewUserSellerService(repo entity.UserSellerRepository) *UserSellerService {
 	return &UserSellerService{UserSellerRepo: repo}
 }
 
-func (s *UserSellerService) AuthLoginUserSeller(login *entity.AuthLoginUserSeller) (*domain.UserSeller, error) {
-	return s.UserSellerRepo.AuthLoginUserSeller(login)
-}
-
 func (s *UserSellerService) CreateUserSeller(UserSeller *domain.UserSeller) (*domain.UserSeller, error) {
 	return s.UserSellerRepo.CreateUserSeller(UserSeller)
 }
@@ -25,8 +21,12 @@ func (s *UserSellerService) GetUserSellerById(id string) (*domain.UserSeller, er
 	return s.UserSellerRepo.GetUserSellerById(id)
 }
 
-func (s *UserSellerService) GetUserSellerByEmail(email string) (*domain.UserSeller, error) {
-	return s.UserSellerRepo.GetUserSellerByEmail(email)
+func (s *UserSellerService) GetUserSellerByUserId(id string) (*domain.UserSeller, error) {
+	return s.UserSellerRepo.GetUserSellerByUserId(id)
+}
+
+func (s *UserSellerService) GetUserByUserEmail(email string) (*domain.User, error) {
+	return s.UserSellerRepo.GetUserByUserEmail(email)
 }
 
 func (s *UserSellerService) UpdateUserSellerData(id string, UserSeller *domain.UserSeller) error {

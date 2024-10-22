@@ -9,15 +9,15 @@ import (
 )
 
 type ProductItems struct {
-	ID                 string     `json:"id" gorm:"primaryKey;type:char(8)"`
-	ProductName        string     `json:"name" validate:"required"`
-	ProductDescription string     `json:"description" validate:"required"`
-	ProductPrice       float32    `json:"price" validate:"required"`
-	CreatedAt          time.Time  `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt          time.Time  `json:"updated_at" gorm:"autoUpdateTime"`
-	CategoryId         uint       `json:"category_id" validate:"required" gorm:"not null"`
-	SellerId           uuid.UUID  `json:"seller_id" validate:"required"`
-	Seller             UserSeller `json:"seller,omitempty" validate:"-", gorm:"foreignKey:SellerId;embedded"`
+	ID                 string      `json:"id" gorm:"primaryKey;type:char(8)"`
+	ProductName        string      `json:"name" validate:"required"`
+	ProductDescription string      `json:"description" validate:"required"`
+	ProductPrice       float32     `json:"price" validate:"required"`
+	CreatedAt          time.Time   `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt          time.Time   `json:"updated_at" gorm:"autoUpdateTime"`
+	CategoryId         uint        `json:"category_id" validate:"required" gorm:"not null"`
+	SellerId           uuid.UUID   `json:"seller_id" validate:"required"`
+	Seller             *UserSeller `json:"seller,omitempty" validate:"-", gorm:"foreignKey:SellerId;embedded"`
 }
 
 type AddProductItems struct {

@@ -43,6 +43,12 @@ type AuthRegisterUser struct {
 	Password string `json:"password" validate:"required,min=3"`
 }
 
+type UserDataReturnViews struct {
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	RoleId int    `json:"role_id"`
+}
+
 // Type Interface For Functions
 
 type UserRepository interface {

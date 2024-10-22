@@ -2,6 +2,7 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,42 +24,42 @@ func NewUserSellerController(service *service.UserSellerService, validate *valid
 }
 
 func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
-	var UserSeller entity.UserSeller
+	var userSeller entity.UserSeller
 
-	if err := ctx.ShouldBindJSON(&UserSeller); err != nil {
+	// Bind JSON input to userSeller struct
+	if err := ctx.ShouldBindJSON(&userSeller); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := c.validate.Struct(UserSeller); err != nil {
+	fmt.Print("This Are User ID was inputted: ", userSeller.UserID)
+
+	// Validate input
+	if err := c.validate.Struct(userSeller); err != nil {
 		errors := validator_format.FormatValidator(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
 		return
 	}
 
-	_, err := c.service.GetUserSellerByEmail(UserSeller.Email)
-
-	if err == nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "UserSeller With This Email Already Exist !"})
-		return
-	}
-
-	hashedPass, err := auth.HashBcryptPassword(UserSeller.Password)
+	_, err := c.service.GetUserSellerByUserId(userSeller.UserID.String())
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "User Seller with this user account already exists!"})
+			return
+		} else if errors.Is(err, gorm.ErrRecordNotFound) {
+			_, err := c.service.CreateUserSeller(&userSeller)
+			if err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
-	UserSeller.Password = hashedPass
-
-	result, err := c.service.CreateUserSeller(&UserSeller)
-
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "Success Creating New UserSeller !", "data": result})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Success creating new UserSeller!"})
 }
 
 func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
@@ -75,11 +76,11 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 		return
 	}
 
-	getUserSeller, err := c.service.AuthLoginUserSeller(&login)
+	getUser, err := c.service.GetUserByUserEmail(login.Email)
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": "UserSeller Data Not found in the database"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "This User might be not registred As UserSeler"})
 			return
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -87,19 +88,31 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 		}
 	}
 
-	if !auth.CheckBcryptPassword(login.Password, getUserSeller.Password) {
+	getUserSeller, err := c.service.GetUserSellerByUserId(getUser.ID.String())
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "UserSeller not found in database"})
+			return
+		} else {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	}
+
+	if !auth.CheckBcryptPassword(login.Password, getUser.Password) {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid UserSeller Password !"})
 		return
 	}
 
-	token, err := auth.GenerateJwtToken(getUserSeller.Email, getUserSeller.Name)
+	token, err := auth.GenerateJwtToken(getUser.Email, getUserSeller.NamaToko)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"jwtToken": token})
+	ctx.JSON(http.StatusOK, gin.H{"jwtToken": token, "user_data": getUserSeller})
 
 }
 
@@ -112,7 +125,7 @@ func (c *UserSellerController) GetUserSellerById(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Success !", "data": result})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Success Request Data User Seller !", "data": result})
 
 }
 
