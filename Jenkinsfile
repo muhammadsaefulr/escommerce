@@ -1,30 +1,23 @@
 pipeline {
     agent any
-
+    
     environment {
         DOCKER_IMAGE = 'escommerce-api-web'
+        DB_HOST = 'db'
+        DB_USER = 'epul'
+        DB_PASSWORD = 'epul123'
+        DB_NAME = 'escommerce_db'
+        DB_PORT = '5432'
+        DOCKER_REGISTRY = 'your-docker-registry-url' 
     }
-
+    
     stages {
-        stage('Inject Env Variables') {
-            steps {
-                script {
-                    def props = readProperties file: '.env'
-                    env.DB_HOST = props['DB_HOST']
-                    env.DB_USER = props['DB_USER']
-                    env.DB_PASSWORD = props['DB_PASSWORD']
-                    env.DB_NAME = props['DB_NAME']
-                    env.DB_PORT = props['DB_PORT']
-                }
-            }
-        }
-
         stage('Checkout') {
             steps {
                 git 'https://github.com/muhammadsaefulr/escommerce-api'
             }
         }
-
+        
         stage('Build Docker Image') {
             steps {
                 script {
@@ -32,7 +25,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Run Docker Container') {
             steps {
                 script {
