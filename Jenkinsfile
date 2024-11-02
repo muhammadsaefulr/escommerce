@@ -6,7 +6,7 @@ pipeline {
                 git 'https://github.com/muhammadsaefulr/escommerce.git' 
             }
         }
-        stage('Build Docker Compose') {
+        stage('Builds Docker Compose') {
             steps {
                 script {
                     sh 'docker-compose -f docker-compose.yml build'
