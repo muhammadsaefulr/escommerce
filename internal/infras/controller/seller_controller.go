@@ -23,6 +23,15 @@ func NewUserSellerController(service *service.UserSellerService, validate *valid
 	return &UserSellerController{service: service, validate: validate}
 }
 
+// UserSeller Customer Register godoc
+// @Tags UserSeller
+// @Summary Create new user seller customer
+// @Accept json
+// @Param user body entity.UserSeller true "User seller data"
+// @Produce json
+// @Description Register new user seller customer
+// @Router /user/seller/register [post]
+// @Success 200 {object} entity.UserSeller "Successfully created new user seller"
 func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 	var userSeller entity.UserSeller
 
@@ -62,6 +71,15 @@ func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Success creating new UserSeller!"})
 }
 
+// UserSeller Customer Auth Login godoc
+// @Tags UserSeller
+// @Summary UserSeller Customer Auth Login
+// @Accept json
+// @Param user body entity.AuthLoginUserSeller true "User seller data"
+// @Produce json
+// @Description Authenticates a user seller and returns user seller data
+// @Router /user/seller/auth/login [post]
+// @Success 200 {object} entity.UserSeller "Successfully authenticated user seller"
 func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 	var login entity.AuthLoginUserSeller
 
@@ -116,6 +134,15 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 
 }
 
+// UserSeller Customer Get By Id godoc
+// @Tags UserSeller
+// @Summary Get user seller by id
+// @Param id path string true "User seller id"
+// @Accept */*
+// @Produce json
+// @Description Get user seller by id
+// @Router /user/seller/get/:id [get]
+// @Success 200 {object} entity.UserSeller "Successfully get user seller"
 func (c *UserSellerController) GetUserSellerById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -129,6 +156,17 @@ func (c *UserSellerController) GetUserSellerById(ctx *gin.Context) {
 
 }
 
+// User Seller Update godoc
+// @Tags UserSeller
+// @Summary Update User Seller Data
+// @Param id path string true "User Seller id"
+// @Accept json
+// @Security BearerAuth
+// @Param user body entity.UserSeller true "User Seller data"
+// @Produce json
+// @Description Update User Seller Data
+// @Router /user/seller/update/:id [put]
+// @Success 200 {object} entity.UserSeller "Successfully update User Seller"
 func (c *UserSellerController) UpdateUserSellerData(ctx *gin.Context) {
 	var UserSeller *entity.UserSeller
 
@@ -161,6 +199,16 @@ func (c *UserSellerController) UpdateUserSellerData(ctx *gin.Context) {
 
 }
 
+// User Seller Delete godoc
+// @Tags UserSeller
+// @Summary Delete User Seller By Id
+// @Param id path string true "User Seller id"
+// @Accept */*
+// @Produce json
+// @Security BearerAuth
+// @Description Delete User Seller By Id
+// @Router /user/seller/delete/:id [delete]
+// @Success 200 {object} entity.UserSeller "Successfully delete User Seller"
 func (c *UserSellerController) DeleteUserSellerById(ctx *gin.Context) {
 	id := ctx.Param("id")
 

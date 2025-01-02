@@ -23,7 +23,7 @@ func NewUserController(service *service.UserService, validate *validator.Validat
 }
 
 // User Customer Register godoc
-// @Tags UserCustomerRegister
+// @Tags UserCustomer
 // @Summary Create new user customer
 // @Accept json
 // @Param user body entity.User true "User data"
@@ -71,7 +71,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 }
 
 // User Customer Auth godoc
-// @Tags UserCustomerAuth
+// @Tags UserCustomer
 // @Summary User Customer Auth
 // @Accept json
 // @Param user body entity.AuthLoginUser true "User data"
@@ -128,11 +128,12 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 }
 
 // User Customer Get By Id godoc
-// @Tags UserCustomerGetById
+// @Tags UserCustomer
 // @Summary Get user by id
 // @Param id path string true "User id"
 // @Accept */*
 // @Produce json
+// @Security BearerAuth
 // @Description Get user by id
 // @Router /user/get/:id [get]
 // @Success 200 {object} entity.User "Successfully get user"
@@ -150,10 +151,11 @@ func (c *UserController) GetUserById(ctx *gin.Context) {
 }
 
 // User Customer Update godoc
-// @Tags UserCustomerUpdate
+// @Tags UserCustomer
 // @Summary Update user data
 // @Param id path string true "User id"
 // @Accept json
+// @Security BearerAuth
 // @Param user body entity.User true "User data"
 // @Produce json
 // @Description Update user data
@@ -192,7 +194,7 @@ func (c *UserController) UpdateUserData(ctx *gin.Context) {
 }
 
 // User Customer Delete godoc
-// @Tags UserCustomerDelete
+// @Tags UserCustomer
 // @Summary Delete user by id
 // @Param id path string true "User id"
 // @Accept */*

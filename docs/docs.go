@@ -25,7 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "UserCustomerAuth"
+                    "UserCustomer"
                 ],
                 "summary": "User Customer Auth",
                 "parameters": [
@@ -59,7 +59,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "UserCustomerDelete"
+                    "UserCustomer"
                 ],
                 "summary": "Delete user by id",
                 "parameters": [
@@ -83,6 +83,11 @@ const docTemplate = `{
         },
         "/user/get/:id": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get user by id",
                 "consumes": [
                     "*/*"
@@ -91,7 +96,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "UserCustomerGetById"
+                    "UserCustomer"
                 ],
                 "summary": "Get user by id",
                 "parameters": [
@@ -123,7 +128,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "UserCustomerRegister"
+                    "UserCustomer"
                 ],
                 "summary": "Create new user customer",
                 "parameters": [
@@ -147,8 +152,196 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/seller/auth/login": {
+            "post": {
+                "description": "Authenticates a user seller and returns user seller data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSeller"
+                ],
+                "summary": "UserSeller Customer Auth Login",
+                "parameters": [
+                    {
+                        "description": "User seller data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.AuthLoginUserSeller"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully authenticated user seller",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/seller/delete/:id": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete User Seller By Id",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSeller"
+                ],
+                "summary": "Delete User Seller By Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Seller id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully delete User Seller",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/seller/get/:id": {
+            "get": {
+                "description": "Get user seller by id",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSeller"
+                ],
+                "summary": "Get user seller by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User seller id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get user seller",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/seller/register": {
+            "post": {
+                "description": "Register new user seller customer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSeller"
+                ],
+                "summary": "Create new user seller customer",
+                "parameters": [
+                    {
+                        "description": "User seller data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created new user seller",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/seller/update/:id": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update User Seller Data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserSeller"
+                ],
+                "summary": "Update User Seller Data",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User Seller id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User Seller data",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully update User Seller",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserSeller"
+                        }
+                    }
+                }
+            }
+        },
         "/user/update/:id": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update user data",
                 "consumes": [
                     "application/json"
@@ -157,7 +350,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "UserCustomerUpdate"
+                    "UserCustomer"
                 ],
                 "summary": "Update user data",
                 "parameters": [
@@ -204,6 +397,62 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 3
+                }
+            }
+        },
+        "entity.AuthLoginUserSeller": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "minLength": 8
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 3
+                }
+            }
+        },
+        "entity.ProductItems": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "description",
+                "name",
+                "price",
+                "seller_id"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "seller": {
+                    "$ref": "#/definitions/entity.UserSeller"
+                },
+                "seller_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },
@@ -254,6 +503,39 @@ const docTemplate = `{
                 },
                 "role_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "entity.UserSeller": {
+            "type": "object",
+            "required": [
+                "nama_toko",
+                "user_id"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "nama_toko": {
+                    "type": "string",
+                    "maxLength": 75,
+                    "minLength": 3
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.ProductItems"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "Menghubungkan penjual dengan pengguna",
+                    "type": "string"
                 }
             }
         }

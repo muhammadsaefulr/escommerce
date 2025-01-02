@@ -12,6 +12,45 @@ definitions:
     - email
     - password
     type: object
+  entity.AuthLoginUserSeller:
+    properties:
+      email:
+        minLength: 8
+        type: string
+      password:
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  entity.ProductItems:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      seller:
+        $ref: '#/definitions/entity.UserSeller'
+      seller_id:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - category_id
+    - description
+    - name
+    - price
+    - seller_id
+    type: object
   entity.User:
     properties:
       created_at:
@@ -47,6 +86,29 @@ definitions:
       role_id:
         type: integer
     type: object
+  entity.UserSeller:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      nama_toko:
+        maxLength: 75
+        minLength: 3
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/entity.ProductItems'
+        type: array
+      updated_at:
+        type: string
+      user_id:
+        description: Menghubungkan penjual dengan pengguna
+        type: string
+    required:
+    - nama_toko
+    - user_id
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -75,7 +137,7 @@ paths:
             $ref: '#/definitions/entity.UserDataReturnViews'
       summary: User Customer Auth
       tags:
-      - UserCustomerAuth
+      - UserCustomer
   /user/delete/:id:
     delete:
       consumes:
@@ -96,7 +158,7 @@ paths:
             $ref: '#/definitions/entity.User'
       summary: Delete user by id
       tags:
-      - UserCustomerDelete
+      - UserCustomer
   /user/get/:id:
     get:
       consumes:
@@ -115,9 +177,11 @@ paths:
           description: Successfully get user
           schema:
             $ref: '#/definitions/entity.User'
+      security:
+      - BearerAuth: []
       summary: Get user by id
       tags:
-      - UserCustomerGetById
+      - UserCustomer
   /user/register:
     post:
       consumes:
@@ -139,7 +203,124 @@ paths:
             $ref: '#/definitions/entity.User'
       summary: Create new user customer
       tags:
-      - UserCustomerRegister
+      - UserCustomer
+  /user/seller/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user seller and returns user seller data
+      parameters:
+      - description: User seller data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.AuthLoginUserSeller'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully authenticated user seller
+          schema:
+            $ref: '#/definitions/entity.UserSeller'
+      summary: UserSeller Customer Auth Login
+      tags:
+      - UserSeller
+  /user/seller/delete/:id:
+    delete:
+      consumes:
+      - '*/*'
+      description: Delete User Seller By Id
+      parameters:
+      - description: User Seller id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully delete User Seller
+          schema:
+            $ref: '#/definitions/entity.UserSeller'
+      security:
+      - BearerAuth: []
+      summary: Delete User Seller By Id
+      tags:
+      - UserSeller
+  /user/seller/get/:id:
+    get:
+      consumes:
+      - '*/*'
+      description: Get user seller by id
+      parameters:
+      - description: User seller id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get user seller
+          schema:
+            $ref: '#/definitions/entity.UserSeller'
+      summary: Get user seller by id
+      tags:
+      - UserSeller
+  /user/seller/register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user seller customer
+      parameters:
+      - description: User seller data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserSeller'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created new user seller
+          schema:
+            $ref: '#/definitions/entity.UserSeller'
+      summary: Create new user seller customer
+      tags:
+      - UserSeller
+  /user/seller/update/:id:
+    put:
+      consumes:
+      - application/json
+      description: Update User Seller Data
+      parameters:
+      - description: User Seller id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Seller data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserSeller'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully update User Seller
+          schema:
+            $ref: '#/definitions/entity.UserSeller'
+      security:
+      - BearerAuth: []
+      summary: Update User Seller Data
+      tags:
+      - UserSeller
   /user/update/:id:
     put:
       consumes:
@@ -164,9 +345,11 @@ paths:
           description: Successfully update user
           schema:
             $ref: '#/definitions/entity.User'
+      security:
+      - BearerAuth: []
       summary: Update user data
       tags:
-      - UserCustomerUpdate
+      - UserCustomer
 schemes:
 - http
 swagger: "2.0"

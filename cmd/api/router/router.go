@@ -17,7 +17,7 @@ func SetupRouter(UserController *controller.UserController, UserSellerController
 		{
 			UserGroup.POST("/auth/login", UserController.AuthLoginUser)
 			UserGroup.POST("/register", UserController.CreateUser)
-			UserGroup.GET("/get/:id", middleware.JwtAuth(), UserController.GetUserById)
+			UserGroup.GET("/get/:id", UserController.GetUserById)
 			UserGroup.PUT("/update/:id", middleware.JwtAuth(), UserController.UpdateUserData)
 			UserGroup.DELETE("/delete/:id", middleware.JwtAuth(), UserController.DeleteUserById)
 		}
@@ -33,7 +33,7 @@ func SetupRouter(UserController *controller.UserController, UserSellerController
 
 		ProductGroup := RouterApiGroup.Group("/product")
 		{
-			ProductGroup.POST("/add", ProductController.AddProductItems)
+			ProductGroup.POST("/add", middleware.JwtAuth(), ProductController.AddProductItems)
 			ProductGroup.GET("/get/:id", ProductController.GetProductItems)
 			ProductGroup.GET("/get/all", ProductController.GetAllProduct)
 			ProductGroup.PUT("/update/:id", ProductController.UpdateProductItems)
