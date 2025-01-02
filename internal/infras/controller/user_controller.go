@@ -22,6 +22,15 @@ func NewUserController(service *service.UserService, validate *validator.Validat
 	return &UserController{service: service, validate: validate}
 }
 
+// User Customer Register godoc
+// @Tags UserCustomerRegister
+// @Summary Create new user customer
+// @Accept json
+// @Param user body entity.User true "User data"
+// @Produce json
+// @Description Register new user customer
+// @Router /user/register [post]
+// @Success 200 {object} entity.User "Successfully created new user"
 func (c *UserController) CreateUser(ctx *gin.Context) {
 	var user entity.User
 
@@ -61,6 +70,15 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Success Creating New User !", "data": result})
 }
 
+// User Customer Auth godoc
+// @Tags UserCustomerAuth
+// @Summary User Customer Auth
+// @Accept json
+// @Param user body entity.AuthLoginUser true "User data"
+// @Produce json
+// @Description Authenticates a user and returns user data
+// @Router /user/auth/login [post]
+// @Success 200 {object} entity.UserDataReturnViews "Successfully authenticated user"
 func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 	var login entity.AuthLoginUser
 
@@ -109,6 +127,15 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 
 }
 
+// User Customer Get By Id godoc
+// @Tags UserCustomerGetById
+// @Summary Get user by id
+// @Param id path string true "User id"
+// @Accept */*
+// @Produce json
+// @Description Get user by id
+// @Router /user/get/:id [get]
+// @Success 200 {object} entity.User "Successfully get user"
 func (c *UserController) GetUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -122,6 +149,16 @@ func (c *UserController) GetUserById(ctx *gin.Context) {
 
 }
 
+// User Customer Update godoc
+// @Tags UserCustomerUpdate
+// @Summary Update user data
+// @Param id path string true "User id"
+// @Accept json
+// @Param user body entity.User true "User data"
+// @Produce json
+// @Description Update user data
+// @Router /user/update/:id [put]
+// @Success 200 {object} entity.User "Successfully update user"
 func (c *UserController) UpdateUserData(ctx *gin.Context) {
 	var user *entity.User
 
@@ -154,6 +191,15 @@ func (c *UserController) UpdateUserData(ctx *gin.Context) {
 
 }
 
+// User Customer Delete godoc
+// @Tags UserCustomerDelete
+// @Summary Delete user by id
+// @Param id path string true "User id"
+// @Accept */*
+// @Produce json
+// @Description Delete user by id
+// @Router /user/delete/:id [delete]
+// @Success 200 {object} entity.User "Successfully delete user"
 func (c *UserController) DeleteUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
