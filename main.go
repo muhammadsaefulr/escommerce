@@ -18,6 +18,9 @@ import (
 // @title Escommerce API
 // @version 1.0
 // @description Test Application
+// @securityDefinitions.apikey Tokens
+// @in header
+// @name Authorization
 
 func main() {
 	db := database.NewGormDB()

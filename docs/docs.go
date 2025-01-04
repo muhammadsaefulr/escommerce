@@ -49,8 +49,13 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/delete/:id": {
+        "/user/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "Tokens": []
+                    }
+                ],
                 "description": "Delete user by id",
                 "consumes": [
                     "*/*"
@@ -81,13 +86,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/get/:id": {
+        "/user/get/{id}": {
             "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Get user by id",
                 "consumes": [
                     "*/*"
@@ -186,11 +186,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/seller/delete/:id": {
+        "/user/seller/delete/{id}": {
             "delete": {
                 "security": [
                     {
-                        "BearerAuth": []
+                        "Tokens": []
                     }
                 ],
                 "description": "Delete User Seller By Id",
@@ -223,7 +223,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/seller/get/:id": {
+        "/user/seller/get/{id}": {
             "get": {
                 "description": "Get user seller by id",
                 "consumes": [
@@ -289,11 +289,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/seller/update/:id": {
+        "/user/seller/update/{id}": {
             "put": {
                 "security": [
                     {
-                        "BearerAuth": []
+                        "Tokens": []
                     }
                 ],
                 "description": "Update User Seller Data",
@@ -335,11 +335,11 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/update/:id": {
+        "/user/update/{id}": {
             "put": {
                 "security": [
                     {
-                        "BearerAuth": []
+                        "Tokens": []
                     }
                 ],
                 "description": "Update user data",
@@ -538,6 +538,13 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "Tokens": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

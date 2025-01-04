@@ -138,7 +138,7 @@ paths:
       summary: User Customer Auth
       tags:
       - UserCustomer
-  /user/delete/:id:
+  /user/delete/{id}:
     delete:
       consumes:
       - '*/*'
@@ -156,10 +156,12 @@ paths:
           description: Successfully delete user
           schema:
             $ref: '#/definitions/entity.User'
+      security:
+      - Tokens: []
       summary: Delete user by id
       tags:
       - UserCustomer
-  /user/get/:id:
+  /user/get/{id}:
     get:
       consumes:
       - '*/*'
@@ -177,8 +179,6 @@ paths:
           description: Successfully get user
           schema:
             $ref: '#/definitions/entity.User'
-      security:
-      - BearerAuth: []
       summary: Get user by id
       tags:
       - UserCustomer
@@ -226,7 +226,7 @@ paths:
       summary: UserSeller Customer Auth Login
       tags:
       - UserSeller
-  /user/seller/delete/:id:
+  /user/seller/delete/{id}:
     delete:
       consumes:
       - '*/*'
@@ -245,11 +245,11 @@ paths:
           schema:
             $ref: '#/definitions/entity.UserSeller'
       security:
-      - BearerAuth: []
+      - Tokens: []
       summary: Delete User Seller By Id
       tags:
       - UserSeller
-  /user/seller/get/:id:
+  /user/seller/get/{id}:
     get:
       consumes:
       - '*/*'
@@ -292,7 +292,7 @@ paths:
       summary: Create new user seller customer
       tags:
       - UserSeller
-  /user/seller/update/:id:
+  /user/seller/update/{id}:
     put:
       consumes:
       - application/json
@@ -317,11 +317,11 @@ paths:
           schema:
             $ref: '#/definitions/entity.UserSeller'
       security:
-      - BearerAuth: []
+      - Tokens: []
       summary: Update User Seller Data
       tags:
       - UserSeller
-  /user/update/:id:
+  /user/update/{id}:
     put:
       consumes:
       - application/json
@@ -346,10 +346,15 @@ paths:
           schema:
             $ref: '#/definitions/entity.User'
       security:
-      - BearerAuth: []
+      - Tokens: []
       summary: Update user data
       tags:
       - UserCustomer
 schemes:
 - http
+securityDefinitions:
+  Tokens:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

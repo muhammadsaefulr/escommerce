@@ -141,7 +141,7 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 // @Accept */*
 // @Produce json
 // @Description Get user seller by id
-// @Router /user/seller/get/:id [get]
+// @Router /user/seller/get/{id} [get]
 // @Success 200 {object} entity.UserSeller "Successfully get user seller"
 func (c *UserSellerController) GetUserSellerById(ctx *gin.Context) {
 	id := ctx.Param("id")
@@ -161,11 +161,11 @@ func (c *UserSellerController) GetUserSellerById(ctx *gin.Context) {
 // @Summary Update User Seller Data
 // @Param id path string true "User Seller id"
 // @Accept json
-// @Security BearerAuth
+// @Security Tokens
 // @Param user body entity.UserSeller true "User Seller data"
 // @Produce json
 // @Description Update User Seller Data
-// @Router /user/seller/update/:id [put]
+// @Router /user/seller/update/{id} [put]
 // @Success 200 {object} entity.UserSeller "Successfully update User Seller"
 func (c *UserSellerController) UpdateUserSellerData(ctx *gin.Context) {
 	var UserSeller *entity.UserSeller
@@ -205,9 +205,9 @@ func (c *UserSellerController) UpdateUserSellerData(ctx *gin.Context) {
 // @Param id path string true "User Seller id"
 // @Accept */*
 // @Produce json
-// @Security BearerAuth
+// @Security Tokens
 // @Description Delete User Seller By Id
-// @Router /user/seller/delete/:id [delete]
+// @Router /user/seller/delete/{id} [delete]
 // @Success 200 {object} entity.UserSeller "Successfully delete User Seller"
 func (c *UserSellerController) DeleteUserSellerById(ctx *gin.Context) {
 	id := ctx.Param("id")
