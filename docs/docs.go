@@ -367,7 +367,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.User"
+                            "$ref": "#/definitions/entity.UpdateUserData"
                         }
                     }
                 ],
@@ -375,7 +375,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Successfully update user",
                         "schema": {
-                            "$ref": "#/definitions/entity.User"
+                            "$ref": "#/definitions/entity.UpdateUserData"
                         }
                     }
                 }
@@ -453,6 +453,24 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "entity.UpdateUserData": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role_id": {
+                    "type": "integer",
+                    "maximum": 1
                 }
             }
         },

@@ -155,13 +155,13 @@ func (c *UserController) GetUserById(ctx *gin.Context) {
 // @Param id path string true "User id"
 // @Accept json
 // @Security Tokens
-// @Param user body entity.User true "User data"
+// @Param user body entity.UpdateUserData true "User data"
 // @Produce json
 // @Description Update user data
 // @Router /user/update/{id} [put]
-// @Success 200 {object} entity.User "Successfully update user"
+// @Success 200 {object} entity.UpdateUserData "Successfully update user"
 func (c *UserController) UpdateUserData(ctx *gin.Context) {
-	var user *entity.User
+	var userUpdate *entity.UpdateUserData
 
 	id := ctx.Param("id")
 
@@ -172,23 +172,23 @@ func (c *UserController) UpdateUserData(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.validate.Struct(user); err != nil {
+	if err := ctx.ShouldBindJSON(&userUpdate); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.validate.Struct(userUpdate); err != nil {
 		errors := validator_format.FormatValidator(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
 		return
 	}
 
-	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := c.service.UpdateUserData(id, user); err != nil {
+	if err := c.service.UpdateUserData(id, userUpdate); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Succes Updating Data", "updated_data": user})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Succes Updating Data"})
 
 }
 

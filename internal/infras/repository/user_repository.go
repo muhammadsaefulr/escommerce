@@ -54,7 +54,12 @@ func (r *UserRepositoryImpl) GetUserById(id string) (*entity.User, error) {
 	return &user, err
 }
 
-func (r *UserRepositoryImpl) UpdateUserData(id string, user *entity.User) error {
+func (r *UserRepositoryImpl) UpdateUserData(id string, userUpdate *entity.UpdateUserData) error {
+	var user entity.User
+
+	user.Name = userUpdate.Name
+	user.Email = userUpdate.Email
+	user.Password = userUpdate.Password
 
 	return r.DB.Where("id = ?", id).Updates(&user).Error
 }

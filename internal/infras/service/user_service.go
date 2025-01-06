@@ -29,8 +29,8 @@ func (s *UserService) GetUserByEmail(email string) (*domain.User, error) {
 	return s.userRepo.GetUserByEmail(email)
 }
 
-func (s *UserService) UpdateUserData(id string, user *domain.User) error {
-	return s.userRepo.UpdateUserData(id, user)
+func (s *UserService) UpdateUserData(id string, userUpdate *domain.UpdateUserData) error {
+	return s.userRepo.UpdateUserData(id, userUpdate)
 }
 
 func (s *UserService) DeleteUserById(id string) error {

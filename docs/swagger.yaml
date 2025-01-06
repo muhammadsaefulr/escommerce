@@ -51,6 +51,18 @@ definitions:
     - price
     - seller_id
     type: object
+  entity.UpdateUserData:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      role_id:
+        maximum: 1
+        type: integer
+    type: object
   entity.User:
     properties:
       created_at:
@@ -337,14 +349,14 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/entity.User'
+          $ref: '#/definitions/entity.UpdateUserData'
       produces:
       - application/json
       responses:
         "200":
           description: Successfully update user
           schema:
-            $ref: '#/definitions/entity.User'
+            $ref: '#/definitions/entity.UpdateUserData'
       security:
       - Tokens: []
       summary: Update user data

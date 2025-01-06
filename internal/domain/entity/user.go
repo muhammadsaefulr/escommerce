@@ -39,7 +39,7 @@ type AuthLoginUser struct {
 
 type AuthRegisterUser struct {
 	Name     string `json:"name" validate:"required,min=2"`
-	Email    string `json:"email" validate:"required,min=8"`
+	Email    string `json:"email" validate:"required,email,min=8"`
 	Password string `json:"password" validate:"required,min=3"`
 }
 
@@ -49,6 +49,13 @@ type UserDataReturnViews struct {
 	RoleId int    `json:"role_id"`
 }
 
+type UpdateUserData struct {
+	Name string `json:"name" validate:"-"`
+	Email string `json:"email" validate:"omitempty,email" structs:"omitempty,email"`
+	Password string `json:"password" validate:"-"`
+	RoleId int `json:"role_id" validate:"max=1,omitempty"` 
+}
+
 // Type Interface For Functions
 
 type UserRepository interface {
@@ -56,6 +63,6 @@ type UserRepository interface {
 	CreateUser(user *User) (*User, error)
 	GetUserByEmail(email string) (*User, error)
 	GetUserById(id string) (*User, error)
-	UpdateUserData(id string, user *User) error
+	UpdateUserData(id string, user *UpdateUserData) error
 	DeleteUserById(id string) error
 }
