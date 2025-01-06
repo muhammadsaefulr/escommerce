@@ -13,11 +13,15 @@ func NewUserSellerRepository(DB *gorm.DB) entity.UserSellerRepository {
 	return &UserSellerRepositoryImpl{DB}
 }
 
-func (r *UserSellerRepositoryImpl) CreateUserSeller(UserSeller *entity.UserSeller) (*entity.UserSeller, error) {
+func (r *UserSellerRepositoryImpl) CreateUserSeller(UserSellerRegist *entity.UserSellerRegister) (*entity.UserSeller, error) {
+	var userSeller entity.UserSeller
 
-	err := r.DB.Create(UserSeller).Error
+	userSeller.UserID = UserSellerRegist.UserID
+	userSeller.NamaToko = UserSellerRegist.NamaToko
 
-	return UserSeller, err
+	err := r.DB.Create(&userSeller).Error
+
+	return &userSeller, err
 }
 
 func (r *UserSellerRepositoryImpl) GetUserByUserEmail(email string) (*entity.User, error) {

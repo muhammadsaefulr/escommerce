@@ -3,7 +3,6 @@ package entity
 import (
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/muhammadsaefulr/escommerce/scripts"
 	"gorm.io/gorm"
 )
@@ -16,7 +15,7 @@ type ProductItems struct {
 	CreatedAt          time.Time   `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt          time.Time   `json:"updated_at" gorm:"autoUpdateTime"`
 	CategoryId         uint        `json:"category_id" validate:"required" gorm:"not null"`
-	SellerId           uuid.UUID   `json:"seller_id" validate:"required"`
+	SellerId           string      `json:"seller_id" validate:"required" gorm:"type:text"`
 	Seller             *UserSeller `json:"seller,omitempty" validate:"-", gorm:"foreignKey:SellerId;embedded"`
 }
 
@@ -35,7 +34,7 @@ type FilteredProductReturn struct {
 	DeletedAt *time.Time `json:"deleted_at"`
 	Name      string     `json:"name"`
 	Price     float32    `json:"price"`
-	SellerID  uuid.UUID  `json:"seller_id"`
+	SellerID  string     `json:"seller_id"`
 }
 
 func (base *ProductItems) BeforeCreate(db *gorm.DB) (err error) {

@@ -34,7 +34,7 @@ func (c *ProductController) AddProductItems(ctx *gin.Context) {
 		return
 	}
 
-	_, err := c.service.GetSellerById(product.SellerId.String())
+	_, err := c.service.GetSellerById(product.SellerId)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Seller User Dengan ID Tersebut Tidak Ditemukan !"})

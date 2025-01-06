@@ -27,37 +27,40 @@ func NewUserSellerController(service *service.UserSellerService, validate *valid
 // @Tags UserSeller
 // @Summary Create new user seller customer
 // @Accept json
-// @Param user body entity.UserSeller true "User seller data"
+// @Param user body entity.UserSellerRegister true "User seller data"
 // @Produce json
 // @Description Register new user seller customer
 // @Router /user/seller/register [post]
-// @Success 200 {object} entity.UserSeller "Successfully created new user seller"
+// @Success 200 {string} "Successfully created new user seller"
 func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
-	var userSeller entity.UserSeller
+	var userSellerRegist entity.UserSellerRegister
 
 	// Bind JSON input to userSeller struct
-	if err := ctx.ShouldBindJSON(&userSeller); err != nil {
+	if err := ctx.ShouldBindJSON(&userSellerRegist); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Print("This Are User ID was inputted: ", userSeller.UserID)
+	fmt.Print("This Are User ID was inputted: ", userSellerRegist.UserID)
 
 	// Validate input
-	if err := c.validate.Struct(userSeller); err != nil {
+	if err := c.validate.Struct(userSellerRegist); err != nil {
 		errors := validator_format.FormatValidator(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
 		return
 	}
 
-	_, err := c.service.GetUserSellerByUserId(userSeller.UserID.String())
+	_, err := c.service.GetUserSellerByUserId(userSellerRegist.UserID.String())
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "User Seller with this user account already exists!"})
 			return
 		} else if errors.Is(err, gorm.ErrRecordNotFound) {
-			_, err := c.service.CreateUserSeller(&userSeller)
+
+			userSeller, err := c.service.CreateUserSeller(&userSellerRegist)
+			ctx.JSON(http.StatusOK, gin.H{"message": "Success creating new UserSeller!", "userId": userSeller.ID})
+
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 				return
@@ -67,8 +70,6 @@ func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 			return
 		}
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "Success creating new UserSeller!"})
 }
 
 // UserSeller Customer Auth Login godoc
@@ -96,9 +97,14 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 
 	getUser, err := c.service.GetUserByUserEmail(login.Email)
 
+	if !auth.CheckBcryptPassword(login.Password, getUser.Password) {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid UserSeller Password !"})
+		return
+	}
+
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": "This User might be not registred As UserSeler"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "User not found in database."})
 			return
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -110,7 +116,7 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": "UserSeller not found in database"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "This User might be not registred As UserSeler."})
 			return
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -118,12 +124,7 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 		}
 	}
 
-	if !auth.CheckBcryptPassword(login.Password, getUser.Password) {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid UserSeller Password !"})
-		return
-	}
-
-	token, err := auth.GenerateJwtToken(getUser.Email, getUserSeller.NamaToko)
+	token, err := auth.GenerateJwtToken(getUser.ID.String(), getUserSeller.NamaToko)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

@@ -13,8 +13,8 @@ func NewUserSellerService(repo entity.UserSellerRepository) *UserSellerService {
 	return &UserSellerService{UserSellerRepo: repo}
 }
 
-func (s *UserSellerService) CreateUserSeller(UserSeller *domain.UserSeller) (*domain.UserSeller, error) {
-	return s.UserSellerRepo.CreateUserSeller(UserSeller)
+func (s *UserSellerService) CreateUserSeller(UserSellerReg *domain.UserSellerRegister) (*domain.UserSeller, error) {
+	return s.UserSellerRepo.CreateUserSeller(UserSellerReg)
 }
 
 func (s *UserSellerService) GetUserSellerById(id string) (*domain.UserSeller, error) {

@@ -121,6 +121,18 @@ definitions:
     - nama_toko
     - user_id
     type: object
+  entity.UserSellerRegister:
+    properties:
+      nama_toko:
+        maxLength: 75
+        minLength: 3
+        type: string
+      user_id:
+        type: string
+    required:
+    - nama_toko
+    - user_id
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -293,7 +305,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/entity.UserSeller'
+          $ref: '#/definitions/entity.UserSellerRegister'
       produces:
       - application/json
       responses:

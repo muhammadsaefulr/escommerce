@@ -10,7 +10,7 @@ import (
 
 type Claims struct {
 	Username string `json:"username"`
-	Email    string `json:"email"`
+	UserId   string `json:"user_id"`
 	jwt.StandardClaims
 }
 
@@ -26,15 +26,15 @@ func CheckBcryptPassword(password, hash string) bool {
 	return err == nil
 }
 
-func GenerateJwtToken(email, username string) (string, error) {
+func GenerateJwtToken(userid, username string) (string, error) {
 	expirateTime := time.Now().Add(5 * time.Minute).Unix()
 
 	claims := Claims{
 		Username: username,
-		Email:    email,
+		UserId:   userid,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirateTime,
-			Issuer:    email,
+			Issuer:    userid,
 		},
 	}
 

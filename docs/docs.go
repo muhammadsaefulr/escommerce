@@ -275,7 +275,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/entity.UserSeller"
+                            "$ref": "#/definitions/entity.UserSellerRegister"
                         }
                     }
                 ],
@@ -553,6 +553,23 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "description": "Menghubungkan penjual dengan pengguna",
+                    "type": "string"
+                }
+            }
+        },
+        "entity.UserSellerRegister": {
+            "type": "object",
+            "required": [
+                "nama_toko",
+                "user_id"
+            ],
+            "properties": {
+                "nama_toko": {
+                    "type": "string",
+                    "maxLength": 75,
+                    "minLength": 3
+                },
+                "user_id": {
                     "type": "string"
                 }
             }

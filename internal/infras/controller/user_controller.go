@@ -110,7 +110,7 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 		return
 	}
 
-	token, err := auth.GenerateJwtToken(getUser.Email, getUser.Name)
+	token, err := auth.GenerateJwtToken(getUser.ID.String(), getUser.Name)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
