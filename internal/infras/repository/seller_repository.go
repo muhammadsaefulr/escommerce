@@ -55,5 +55,5 @@ func (r *UserSellerRepositoryImpl) UpdateUserSellerData(id string, UserSeller *e
 
 func (r *UserSellerRepositoryImpl) DeleteUserSellerById(id string) error {
 
-	return r.DB.Delete(&entity.UserSeller{}, id).Error
+	return r.DB.Delete(&entity.UserSeller{}, "id = ?", id).Error
 }

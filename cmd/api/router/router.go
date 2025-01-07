@@ -47,7 +47,7 @@ func SetupRouter(UserController *controller.UserController, UserSellerController
 			}
 		}
 
-		ShoppingCartGroup := RouterApiGroup.Group("/cart/")
+		ShoppingCartGroup := RouterApiGroup.Group("/cart")
 		{
 			ShoppingCartGroup.GET("/get/:userId", CartController.GetShoppingCartById)
 			ShoppingCartGroup.POST("/add", CartController.AddShoppingCartItem)

@@ -14,7 +14,8 @@ import (
 var (
 	r         http.Handler
 	jwtToken  string
-	userId    string
+	TokoId    string
+	UserId    string
 	productId string
 )
 

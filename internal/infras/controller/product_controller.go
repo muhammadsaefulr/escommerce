@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -21,24 +22,33 @@ func NewProductController(service *service.ProductService, validate *validator.V
 }
 
 func (c *ProductController) AddProductItems(ctx *gin.Context) {
-	var product entity.ProductItems
+	var insertProduct entity.AddProductItems
+	sellerIdRaw, _ := ctx.Get("user_id")
+	sellerId := fmt.Sprintf("%v", sellerIdRaw)
 
-	if err := ctx.ShouldBindJSON(&product); err != nil {
+	if err := ctx.ShouldBindJSON(&insertProduct); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 
-	if err := c.validate.Struct(product); err != nil {
-		log.Println(product)
+	if err := c.validate.Struct(insertProduct); err != nil {
 		errors := validator_format.FormatValidator(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "errorValidation!", "error_validation": errors})
 		return
 	}
 
-	_, err := c.service.GetSellerById(product.SellerId)
+	_, err := c.service.GetSellerById(sellerId)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Seller User Dengan ID Tersebut Tidak Ditemukan !"})
 		return
+	}
+
+	product := entity.ProductItems{
+		ProductName:        insertProduct.ProductName,
+		ProductDescription: insertProduct.ProductDescription,
+		ProductPrice:       insertProduct.ProductPrice,
+		CategoryId:         insertProduct.CategoryId,
+		SellerId:           sellerId,
 	}
 
 	result, err := c.service.AddProductItems(&product)
@@ -88,9 +98,10 @@ func (c *ProductController) GetProductItems(ctx *gin.Context) {
 func (c *ProductController) UpdateProductItems(ctx *gin.Context) {
 	idProduct := ctx.Param("id")
 
+	var productUpdate entity.UpdateProductItems
 	var product *entity.ProductItems
 
-	if err := ctx.ShouldBindJSON(&product); err != nil {
+	if err := ctx.ShouldBindJSON(&productUpdate); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -100,6 +111,14 @@ func (c *ProductController) UpdateProductItems(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+
+	product = &entity.ProductItems{
+		ID:                 idProduct,
+		ProductName:        productUpdate.ProductName,
+		ProductDescription: productUpdate.ProductDescription,
+		ProductPrice:       productUpdate.ProductPrice,
+		CategoryId:         productUpdate.CategoryId,
 	}
 
 	product, err = c.service.UpdateProductItems(idProduct, getProduct, product)

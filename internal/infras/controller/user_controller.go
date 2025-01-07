@@ -119,7 +119,7 @@ func (c *UserController) AuthLoginUser(ctx *gin.Context) {
 
 	UserReturn := &entity.UserDataReturnViews{
 		Name:   getUser.Name,
-		Email:  getUser.Email,
+		UserId: getUser.ID.String(),
 		RoleId: getUser.RoleId,
 	}
 
@@ -159,7 +159,7 @@ func (c *UserController) GetUserById(ctx *gin.Context) {
 // @Produce json
 // @Description Update user data
 // @Router /user/update/{id} [put]
-// @Success 200 {object} entity.UpdateUserData "Successfully update user"
+// @Success 200 {string} "Successfully update user"
 func (c *UserController) UpdateUserData(ctx *gin.Context) {
 	var userUpdate *entity.UpdateUserData
 

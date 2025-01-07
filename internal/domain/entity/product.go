@@ -23,8 +23,14 @@ type AddProductItems struct {
 	ProductName        string  `json:"name" validate:"required"`
 	ProductDescription string  `json:"description" validate:"required"`
 	ProductPrice       float32 `json:"price" validate:"required"`
-	SellerId           string  `json:"seller_id"`
 	CategoryId         uint    `json:"category_id" validate:"required"`
+}
+
+type UpdateProductItems struct {
+	ProductName        string  `json:"name" validate:"omitempty"`
+	ProductDescription string  `json:"description" validate:"omitempty"`
+	ProductPrice       float32 `json:"price" validate:"omitempty"`
+	CategoryId         uint    `json:"category_id" validate:"omitempty"`
 }
 
 type FilteredProductReturn struct {

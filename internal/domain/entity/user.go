@@ -45,15 +45,15 @@ type AuthRegisterUser struct {
 
 type UserDataReturnViews struct {
 	Name   string `json:"name"`
-	Email  string `json:"email"`
+	UserId string `json:"user_id"`
 	RoleId int    `json:"role_id"`
 }
 
 type UpdateUserData struct {
-	Name string `json:"name" validate:"-"`
-	Email string `json:"email" validate:"omitempty,email" structs:"omitempty,email"`
+	Name     string `json:"name" validate:"-"`
+	Email    string `json:"email" validate:"omitempty,email" structs:"omitempty,email"`
 	Password string `json:"password" validate:"-"`
-	RoleId int `json:"role_id" validate:"max=1,omitempty"` 
+	RoleId   int    `json:"role_id" validate:"max=1,omitempty"`
 }
 
 // Type Interface For Functions

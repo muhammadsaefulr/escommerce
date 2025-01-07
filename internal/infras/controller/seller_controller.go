@@ -34,6 +34,7 @@ func NewUserSellerController(service *service.UserSellerService, validate *valid
 // @Success 200 {string} "Successfully created new user seller"
 func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 	var userSellerRegist entity.UserSellerRegister
+	var userSeller entity.UserSeller
 
 	// Bind JSON input to userSeller struct
 	if err := ctx.ShouldBindJSON(&userSellerRegist); err != nil {
@@ -58,18 +59,21 @@ func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 			return
 		} else if errors.Is(err, gorm.ErrRecordNotFound) {
 
-			userSeller, err := c.service.CreateUserSeller(&userSellerRegist)
-			ctx.JSON(http.StatusOK, gin.H{"message": "Success creating new UserSeller!", "userId": userSeller.ID})
+			UserSeller, err := c.service.CreateUserSeller(&userSellerRegist)
+			userSeller = *UserSeller
 
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 				return
 			}
+
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Success creating new UserSeller!", "TokoId": userSeller.ID})
 }
 
 // UserSeller Customer Auth Login godoc
@@ -131,7 +135,7 @@ func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"jwtToken": token, "user_data": getUserSeller})
+	ctx.JSON(http.StatusOK, gin.H{"message": "Berhasil login sebagai seller.", "jwtToken": token})
 
 }
 

@@ -17,7 +17,6 @@ func TestAddProduct(t *testing.T) {
 		ProductName:        "Shampoo",
 		ProductDescription: "shampoo 1 dus 24pcs",
 		ProductPrice:       64000,
-		SellerId:           "01ef727e-7791-69b2-bbb2-008cfa73f649",
 		CategoryId:         1,
 	}
 
@@ -63,7 +62,6 @@ func TestUpdateProduct(t *testing.T) {
 		ProductName:        "Shampoo",
 		ProductDescription: "shampoo 1 dus 12pcs",
 		ProductPrice:       34000,
-		SellerId:           "01ef727e-7791-69b2-bbb2-008cfa73f649",
 		CategoryId:         1,
 	}
 
