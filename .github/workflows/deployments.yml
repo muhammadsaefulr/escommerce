@@ -60,13 +60,13 @@ jobs:
         fi
 
     # 7. Deploy to VPS using Docker Compose
-    - name: Deploy to VPS
+        - name: Deploy to VPS
       uses: appleboy/ssh-action@v0.1.7
       with:
-        host: ${{ secrets.VPS_HOST }}  # Host VPS
-        username: ${{ secrets.VPS_USER }}  # Username VPS
-        key: ${{ secrets.VPS_SSH_PRIV }}  # Password VPS
-        port: ${{ secrets.VPS_PORT }}  # Port SSH VPS
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        password: ${{ secrets.VPS_PASS }}
+        port: ${{ secrets.VPS_PORT }}
         script: |
           # Stop and remove existing containers (if any)
           docker-compose down || true
