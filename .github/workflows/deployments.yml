@@ -65,7 +65,7 @@ jobs:
       with:
         host: ${{ secrets.VPS_HOST }}  # Host VPS
         username: ${{ secrets.VPS_USER }}  # Username VPS
-        password: ${{ secrets.VPS_PASS }}  # Password VPS
+        key: ${{ secrets.VPS_SSH_KEY }}  # Private Key VPS  
         port: ${{ secrets.VPS_PORT }}  # Port SSH VPS
         script: |
           # Stop and remove existing containers (if any)
