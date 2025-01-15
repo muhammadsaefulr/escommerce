@@ -89,12 +89,13 @@ jobs:
           # Start the application using Docker Compose
           cd ~/escommerce
           if ! docker-compose up -d; then
-            curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo -H "Content-Type: application/json" -d '{"session":"mysess","to": "6288219406742", "message": "
-            Docker Compose build failed \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY
-            "}'
+            curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
+                -H "Content-Type: application/json" \
+                -d '{"session":"mysess","to":"6288219406742","message":"Docker Compose build failed \n Github Action JobId: '"$GITHUB_JOB"' \n At Github Repository: '"$GITHUB_REPOSITORY"'"}'
             exit 1
           else
-            curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo -H "Content-Type: application/json" -d '{"session":"mysess","to": "6288219406742", "message": "
-            Docker Compose build Successfully \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY
-            "}'
+            curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
+                -H "Content-Type: application/json" \
+                -d '{"session":"mysess","to":"6288219406742","message":"Docker Compose build Successfully \n Github Action JobId: '"$GITHUB_JOB"' \n At Github Repository: '"$GITHUB_REPOSITORY"'"}'
           fi
+
