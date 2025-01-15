@@ -91,11 +91,11 @@ jobs:
           if ! docker-compose up -d; then
             curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
                 -H "Content-Type: application/json" \
-                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build failed \n Github Action JobId: ${{ github.run_id }} \n At Github Repository: ${{ github.repository }}) \n Job Url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build failed \n Github Action JobId: ${{ github.run_id }} \n At Github Repository: ${{ github.repository }}) \n \njob Url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \n"}'
             exit 1
           else
             curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
                 -H "Content-Type: application/json" \
-                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build Successfully \n Github Action JobId: ${{ github.run_id }} \n At Github Repository: ${{ github.repository }}) \n Job Url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
+                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build Successfully \n Github Action JobId: ${{ github.run_id }} \n At Github Repository: ${{ github.repository }}) \n \nJob Url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \n"}'
           fi
 
