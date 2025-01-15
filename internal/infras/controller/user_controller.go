@@ -159,7 +159,7 @@ func (c *UserController) GetUserById(ctx *gin.Context) {
 // @Produce json
 // @Description Update user data
 // @Router /user/update/{id} [put]
-// @Success 200 {string} "Successfully update user"
+// @Success 200 "Successfully update user"
 func (c *UserController) UpdateUserData(ctx *gin.Context) {
 	var userUpdate *entity.UpdateUserData
 

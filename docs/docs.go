@@ -15,6 +15,72 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/product/add": {
+            "post": {
+                "description": "Sellers can add product items if they are authorized",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductItems"
+                ],
+                "summary": "Add Product Items",
+                "parameters": [
+                    {
+                        "description": "Product Items",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.AddProductItems"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.FilteredProductReturn"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/get/all/{sellerId}": {
+            "get": {
+                "description": "Sellers can get all product items if they are authorized",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductItems"
+                ],
+                "summary": "Get All Product With Seller Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Seller Id",
+                        "name": "sellerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.ProductItems"
+                        }
+                    }
+                }
+            }
+        },
         "/user/auth/login": {
             "post": {
                 "description": "Authenticates a user and returns user data",
@@ -178,10 +244,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully authenticated user seller",
-                        "schema": {
-                            "$ref": "#/definitions/entity.UserSeller"
-                        }
+                        "description": "Successfully login as seller"
                     }
                 }
             }
@@ -215,10 +278,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully delete User Seller",
-                        "schema": {
-                            "$ref": "#/definitions/entity.UserSeller"
-                        }
+                        "description": "Successfully delete User Seller"
                     }
                 }
             }
@@ -281,10 +341,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully created new user seller",
-                        "schema": {
-                            "$ref": "#/definitions/entity.UserSeller"
-                        }
+                        "description": "Successfully created new user seller"
                     }
                 }
             }
@@ -373,16 +430,36 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully update user",
-                        "schema": {
-                            "$ref": "#/definitions/entity.UpdateUserData"
-                        }
+                        "description": "Successfully update user"
                     }
                 }
             }
         }
     },
     "definitions": {
+        "entity.AddProductItems": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "description",
+                "name",
+                "price"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                }
+            }
+        },
         "entity.AuthLoginUser": {
             "type": "object",
             "required": [
@@ -414,6 +491,32 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "minLength": 3
+                }
+            }
+        },
+        "entity.FilteredProductReturn": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "seller_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
                 }
             }
         },
@@ -513,14 +616,14 @@ const docTemplate = `{
         "entity.UserDataReturnViews": {
             "type": "object",
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
                 "role_id": {
                     "type": "integer"
+                },
+                "user_id": {
+                    "type": "string"
                 }
             }
         },
@@ -534,9 +637,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "nama_toko": {
                     "type": "string",
                     "maxLength": 75,
@@ -547,6 +647,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/entity.ProductItems"
                     }
+                },
+                "seller_id": {
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"

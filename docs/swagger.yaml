@@ -1,5 +1,21 @@
 basePath: /api
 definitions:
+  entity.AddProductItems:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    required:
+    - category_id
+    - description
+    - name
+    - price
+    type: object
   entity.AuthLoginUser:
     properties:
       email:
@@ -23,6 +39,23 @@ definitions:
     required:
     - email
     - password
+    type: object
+  entity.FilteredProductReturn:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      seller_id:
+        type: string
+      updated_at:
+        type: string
     type: object
   entity.ProductItems:
     properties:
@@ -91,18 +124,16 @@ definitions:
     type: object
   entity.UserDataReturnViews:
     properties:
-      email:
-        type: string
       name:
         type: string
       role_id:
         type: integer
+      user_id:
+        type: string
     type: object
   entity.UserSeller:
     properties:
       created_at:
-        type: string
-      id:
         type: string
       nama_toko:
         maxLength: 75
@@ -112,6 +143,8 @@ definitions:
         items:
           $ref: '#/definitions/entity.ProductItems'
         type: array
+      seller_id:
+        type: string
       updated_at:
         type: string
       user_id:
@@ -140,6 +173,49 @@ info:
   title: Escommerce API
   version: "1.0"
 paths:
+  /product/add:
+    post:
+      consumes:
+      - application/json
+      description: Sellers can add product items if they are authorized
+      parameters:
+      - description: Product Items
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/entity.AddProductItems'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.FilteredProductReturn'
+      summary: Add Product Items
+      tags:
+      - ProductItems
+  /product/get/all/{sellerId}:
+    get:
+      consumes:
+      - '*/*'
+      description: Sellers can get all product items if they are authorized
+      parameters:
+      - description: Seller Id
+        in: path
+        name: sellerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ProductItems'
+      summary: Get All Product With Seller Id
+      tags:
+      - ProductItems
   /user/auth/login:
     post:
       consumes:
@@ -244,9 +320,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: Successfully authenticated user seller
-          schema:
-            $ref: '#/definitions/entity.UserSeller'
+          description: Successfully login as seller
       summary: UserSeller Customer Auth Login
       tags:
       - UserSeller
@@ -266,8 +340,6 @@ paths:
       responses:
         "200":
           description: Successfully delete User Seller
-          schema:
-            $ref: '#/definitions/entity.UserSeller'
       security:
       - Tokens: []
       summary: Delete User Seller By Id
@@ -311,8 +383,6 @@ paths:
       responses:
         "200":
           description: Successfully created new user seller
-          schema:
-            $ref: '#/definitions/entity.UserSeller'
       summary: Create new user seller customer
       tags:
       - UserSeller
@@ -367,8 +437,6 @@ paths:
       responses:
         "200":
           description: Successfully update user
-          schema:
-            $ref: '#/definitions/entity.UpdateUserData'
       security:
       - Tokens: []
       summary: Update user data

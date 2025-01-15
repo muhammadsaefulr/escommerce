@@ -31,7 +31,7 @@ func NewUserSellerController(service *service.UserSellerService, validate *valid
 // @Produce json
 // @Description Register new user seller customer
 // @Router /user/seller/register [post]
-// @Success 200 {string} "Successfully created new user seller"
+// @Success 200 "Successfully created new user seller"
 func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 	var userSellerRegist entity.UserSellerRegister
 	var userSeller entity.UserSeller
@@ -84,7 +84,7 @@ func (c *UserSellerController) CreateUserSeller(ctx *gin.Context) {
 // @Produce json
 // @Description Authenticates a user seller and returns user seller data
 // @Router /user/seller/auth/login [post]
-// @Success 200 {object} entity.UserSeller "Successfully authenticated user seller"
+// @Success 200 "Successfully login as seller"
 func (c *UserSellerController) AuthLoginUserSeller(ctx *gin.Context) {
 	var login entity.AuthLoginUserSeller
 
@@ -213,7 +213,7 @@ func (c *UserSellerController) UpdateUserSellerData(ctx *gin.Context) {
 // @Security Tokens
 // @Description Delete User Seller By Id
 // @Router /user/seller/delete/{id} [delete]
-// @Success 200 {object} entity.UserSeller "Successfully delete User Seller"
+// @Success 200 "Successfully delete User Seller"
 func (c *UserSellerController) DeleteUserSellerById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
