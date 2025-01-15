@@ -1,0 +1,80 @@
+name: CI/CD Pipeline Auto Deploy
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. Setup Go environment
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: 1.23
+
+    # 3. Set up Go Modules
+    - name: Set up Go Modules
+      run: |
+        go env -w GOPROXY=direct
+        go env -w GOSUMDB=off
+
+    # 4. Download dependencies
+    - name: Download dependencies
+      run: |
+        go mod tidy
+        go mod download
+
+    # 5. Build the Go application
+    - name: Build Go app
+      run: |
+        if ! go build -o app main.go; then
+          echo "Build Failed \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY"
+          exit 1
+        else
+          echo "Go application built successfully \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY"
+        fi
+
+    # 6. Build Docker images using Docker Compose
+    - name: Build Docker images with Compose
+      run: |
+        if ! docker-compose build; then
+          echo "Docker Compose build failed \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY"
+          exit 1
+        else
+          echo "Docker images built successfully \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY"
+        fi
+
+    # 7. Deploy to VPS using Docker Compose
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_HOST }}  # Host VPS
+        username: ${{ secrets.VPS_USER }}  # Username VPS
+        password: ${{ secrets.VPS_PASS }}  # Password VPS
+        port: ${{ secrets.VPS_PORT }}  # Port SSH VPS
+        script: |
+          # Stop and remove existing containers (if any)
+          docker-compose down || true
+
+          # Copy necessary files to VPS
+          mkdir -p ~/escommerce
+          rm -rf ~/escommerce/*
+          scp -P ${{ secrets.VPS_PORT }} ./docker-compose.yml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/escommerce
+          scp -P ${{ secrets.VPS_PORT }} ./app ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/escommerce/
+
+          # Start the application using Docker Compose
+          cd ~/escommerce
+          if ! docker-compose up -d; then
+            echo "Docker Compose up failed"
+            exit 1
+          else
+            echo "Application deployed successfully"
+          fi
