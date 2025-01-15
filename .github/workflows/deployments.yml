@@ -60,7 +60,7 @@ jobs:
         fi
 
     # 7. Deploy to VPS using Docker Compose
-        - name: Deploy to VPS
+    - name: Deploy to VPS
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.VPS_HOST }}
