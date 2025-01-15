@@ -71,17 +71,30 @@ jobs:
           # Stop and remove existing containers (if any)
           docker-compose down || true
 
-          # Copy necessary files to VPS
-          mkdir -p ~/escommerce
-          rm -rf ~/escommerce/*
-          scp -P ${{ secrets.VPS_PORT }} ./docker-compose.yml ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/escommerce
-          scp -P ${{ secrets.VPS_PORT }} ./app ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:~/escommerce/
+          # Updating repository information
+          
+          TARGET_DIR=~/escommerce
+          REPO_URL=https://github.com/muhammadsaefulr/escommerce.git
+
+          # Check if the target directory exists
+          if [ -d "$TARGET_DIR" ]; then
+              echo "Directory $TARGET_DIR exists. Pulling latest changes..."
+              cd "$TARGET_DIR" || exit
+              git pull origin main
+          else
+              echo "Directory $TARGET_DIR not found. Cloning the repository..."
+              git clone "$REPO_URL" "$TARGET_DIR"
+          fi
 
           # Start the application using Docker Compose
           cd ~/escommerce
           if ! docker-compose up -d; then
-            echo "Docker Compose up failed"
+            curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo -H "Content-Type: application/json" -d '{"session":"mysess","to": "6288219406742", "message": "
+            Docker Compose build failed \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY
+            "}'
             exit 1
           else
-            echo "Application deployed successfully"
+            curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo -H "Content-Type: application/json" -d '{"session":"mysess","to": "6288219406742", "message": "
+            Docker Compose build Successfully \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY
+            "}'
           fi
