@@ -10,6 +10,6 @@ COPY . .
 
 ENV GOCACHE=/root/.cache/go-build
 
-RUN --mount=type=cache,target="/root/.cache/go-build" go build -o main ./cmd/server
+RUN --mount=type=cache,target="/root/.cache/go-build" go build -o main main.go
 
 CMD [ "./main" ]
