@@ -16,8 +16,8 @@ func (s *ProductService) AddProductItems(product *entity.ProductItems) (*entity.
 	return s.productRepo.AddProductItems(product)
 }
 
-func (s *ProductService) GetAllProduct() ([]entity.ProductItems, error) {
-	return s.productRepo.GetAllProduct()
+func (s *ProductService) GetAllProductBySellerId(selllerId string) ([]entity.ProductItems, error) {
+	return s.productRepo.GetAllProductBySellerId(selllerId)
 }
 
 func (s *ProductService) GetProductItems(ID string) (*entity.ProductItems, error) {

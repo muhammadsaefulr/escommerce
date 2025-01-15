@@ -61,7 +61,7 @@ func (base *ProductItems) BeforeCreate(db *gorm.DB) (err error) {
 
 type ProductRepository interface {
 	AddProductItems(product *ProductItems) (*ProductItems, error)
-	GetAllProduct() ([]ProductItems, error)
+	GetAllProductBySellerId(sellerId string) ([]ProductItems, error)
 	GetProductItems(ID string) (*ProductItems, error)
 	GetSellerById(ID string) (*UserSeller, error)
 	UpdateProductItems(ID string, product *ProductItems, updatedProduct *ProductItems) (*ProductItems, error)

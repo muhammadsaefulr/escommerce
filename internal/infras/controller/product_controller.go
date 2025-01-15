@@ -21,6 +21,15 @@ func NewProductController(service *service.ProductService, validate *validator.V
 	return &ProductController{service: service, validate: validate}
 }
 
+// Add Product Item Controller godoc
+// @Tags ProductItems
+// @Summary Add Product Items
+// @Description Sellers can add product items if they are authorized
+// @Accept json
+// @Produce json
+// @Param product body entity.AddProductItems true "Product Items"
+// @Success 200 {object} entity.FilteredProductReturn
+// @Router /product/add [post]
 func (c *ProductController) AddProductItems(ctx *gin.Context) {
 	var insertProduct entity.AddProductItems
 	sellerIdRaw, _ := ctx.Get("user_id")
@@ -69,8 +78,18 @@ func (c *ProductController) AddProductItems(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Berhasil Membuat Product !", "data": filteredResult})
 }
 
-func (c *ProductController) GetAllProduct(ctx *gin.Context) {
-	result, err := c.service.GetAllProduct()
+// Get All Product With Seller Id godoc
+// @Tags ProductItems
+// @Summary Get All Product With Seller Id
+// @Description Sellers can get all product items if they are authorized
+// @Accept */*
+// @Produce json
+// @Param sellerId path string true "Seller Id"
+// @Success 200 {object} entity.ProductItems
+// @Router /product/get/all/{sellerId} [get]
+func (c *ProductController) GetAllProductWithSellerId(ctx *gin.Context) {
+	sellerId := ctx.Param("sellerId")
+	result, err := c.service.GetAllProductBySellerId(sellerId)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

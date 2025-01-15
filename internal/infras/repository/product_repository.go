@@ -21,10 +21,10 @@ func (r *ProductRepositoryImpl) AddProductItems(product *entity.ProductItems) (*
 	return product, err
 }
 
-func (r *ProductRepositoryImpl) GetAllProduct() ([]entity.ProductItems, error) {
+func (r *ProductRepositoryImpl) GetAllProductBySellerId(sellerId string) ([]entity.ProductItems, error) {
 	var product []entity.ProductItems
 
-	err := r.DB.Preload("Seller").Find(&product).Error
+	err := r.DB.Preload("Seller").Find(&product).Where("SellerId = ?", sellerId).Error
 
 	return product, err
 }
