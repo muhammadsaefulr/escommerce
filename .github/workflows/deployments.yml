@@ -62,9 +62,6 @@ jobs:
     # 7. Deploy to VPS using ssh
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v0.1.7
-      env:
-        GITHUB_JOB_NAME = ${{ github.job }}
-        GITHUB_REPO = ${{ github.repository }}
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
