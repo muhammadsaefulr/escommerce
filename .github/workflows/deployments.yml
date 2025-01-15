@@ -19,12 +19,6 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: 1.23
-
-    # 3. Setup Docker
-    - name: Setup Docker
-      uses: docker-practice/actions-setup-docker@master
-      with:
-        docker_version: 23.0.1
     
     # 3. Setup Docker Compose
     - name: Setup Docker Compose
