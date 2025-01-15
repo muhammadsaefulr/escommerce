@@ -59,9 +59,12 @@ jobs:
           echo "Docker images built successfully \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY"
         fi
 
-    # 7. Deploy to VPS using Docker Compose
+    # 7. Deploy to VPS using ssh
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v0.1.7
+      env:
+        GITHUB_JOB_NAME = ${{ github.job }}
+        GITHUB_REPO = ${{ github.repository }}
       with:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
@@ -91,7 +94,7 @@ jobs:
           if ! docker-compose up -d; then
             curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
                 -H "Content-Type: application/json" \
-                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build failed \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY "}'
+                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build failed \n Github Action JobId: ${{ github.run_id }} \n At Github Repository: ${{ github.repository }}) "}'
             exit 1
           else
             curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
