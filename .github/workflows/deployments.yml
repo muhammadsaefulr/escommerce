@@ -96,6 +96,6 @@ jobs:
           else
             curl -X POST https://wagate.msaepul.my.id/message/send-buildinfo \
                 -H "Content-Type: application/json" \
-                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build Successfully \n Github Action JobId: $GITHUB_JOB \n At Github Repository: $GITHUB_REPOSITORY"}'
+                -d '{"session":"mysess","to":"6288219406742","text":"Docker Compose build Successfully \n Github Action JobId: ${{ github.run_id }} \n At Github Repository: ${{ github.repository }})"}'
           fi
 
