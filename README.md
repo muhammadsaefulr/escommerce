@@ -1,6 +1,6 @@
-# Simple Product Marketplace
+# ESCommerce
 
-Simple Product Marketplace adalah **REST API** yang menyediakan fitur marketplace sederhana seperti e-commerce pada umumnya. Proyek ini dibangun menggunakan **Golang** dengan framework **GIN**, dan **PostgreSQL** sebagai database utamanya.
+ESCommerce adalah **REST API** yang menyediakan fitur marketplace sederhana seperti e-commerce pada umumnya. Proyek ini dibangun menggunakan **Golang** dengan framework **GIN**, dan **PostgreSQL** sebagai database utamanya.
 
 ## ✨ Fitur Utama
 
